@@ -1,0 +1,55 @@
+#!/usr/bin/env fish
+
+function network_connected
+	if test (iw wlp2s0 link | grep -Po 'Not connected.')
+		echo 0
+	else
+		echo 1
+	end
+end
+
+function network_connected_s
+	if test (network_connected)
+		echo Connected
+	else
+		echo Not connected
+	end
+end
+
+function network_ssid
+	if test (network_connected)
+		echo (iw wlp2s0 link | grep -Po '(?<=SSID: ).+$')
+	else
+		echo null
+	end
+end
+
+function network_mac
+	if test (network_connected)
+ 		echo (iw wlp2s0 link | grep -Po '(?<=Connected to ).*(?= \(on wlp2s0\))')
+	else
+		echo null
+	end
+end
+
+function network_signal
+	if test (network_connected)
+		echo (iw wlp2s0 link | grep -Po '(?<=signal: )\\-?\\d+(?= dBm)')
+		#echo (iwconfig wlp2s0 | grep -Po '(?<=Link Quality=)\\d+(?=/70)')
+	else
+		echo -100
+	end
+end
+
+function dbm_to_percent
+	set -l dbm $argv[1]
+	if test $dbm -ge -20
+		echo 100
+	else if test $dbm -le -92
+		echo 1
+	else
+		echo (echo '-0.01929 * ('$dbm' + 92) * ('$dbm' - 52)' | bc -l)
+	end
+end
+
+notify-send -u normal 'Network' 'Status: WiFi '(network_connected_s)'\nSignal: '(network_signal)'dBm''\nSSID: '(network_ssid)'\nMAC: '(network_mac)

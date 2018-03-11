@@ -1,0 +1,31 @@
+#!/usr/bin/env fish
+
+function battery_info
+	echo (upower -i /org/freedesktop/UPower/devices/battery_BAT0)
+end
+
+function battery_percentage
+	echo (battery_info | \
+		grep -Po 'percentage:\\s+\\d+%' | \
+		grep -Po '\\d+')
+end
+
+function battery_energy_consumption
+	echo (battery_info | \
+		grep -Po 'energy-rate:\\s+\\d+.\\d+ W' | \
+		grep -Po '\\d+.\\d+')
+end
+
+function battery_remaining_hours
+	echo (battery_info | \
+		grep -Po 'time to empty:\\s+\\d+\.\\d+ hours' | \
+		grep -Po '\\d+\.\\d+')
+end
+
+function battery_state
+	echo (battery_info | \
+		grep -Po 'state:\\s+ \\w+' | \
+		grep -Po '\\w+$')
+end
+
+notify-send -u normal 'Battery' 'Status: '(battery_state)'\nPercentage: '(battery_percentage)'%\nConsumption: '(battery_energy_consumption)' W\nRemaining: '(battery_remaining_hours)' hours'

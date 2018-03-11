@@ -1,0 +1,13 @@
+#!/usr/bin/env fish
+# sets image `~/Pictures/.wallpaper.{jpg,jpeg,png}` as the current wallpaper via `feh`
+
+set image $argv[1]
+if test -f $image
+	rm ~/Pictures/.wallpaper.*
+	set ext (echo $image | awk -F '[.]' '{print $NF}')
+	cp -f $image ~/Pictures/.wallpaper.$ext
+	update_wallpaper
+else
+	# bogus image path!
+	exit 1
+end

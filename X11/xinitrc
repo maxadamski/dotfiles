@@ -1,0 +1,59 @@
+#!/usr/bin/env sh
+
+#
+# configure x11
+# 
+
+xrandr --output eDP1 --set "Broadcast RGB" "Full"
+xrandr --dpi {{x11.dpi}}
+
+setxkbmap pl dvp
+setxkbmap -option caps:swapescape
+setxkbmap -option terminate:ctrl_alt_bksp
+{{#is_laptop}}
+setxkbmap -option altwin:swap_lalt_lwin
+{{/is_laptop}}
+
+# keyboard repeat rate
+xset r rate 200 30
+
+# lefty apple wireless mouse
+#xinput set-button-map 13 3 2 1
+
+# add font search paths
+xset +fp /usr/share/fonts/TTF,/usr/share/fonts/OTF,/usr/share/fonts/noto
+xset +fp ~/.local/share/fonts
+
+# update visual settings
+xrdb -merge ~/.config/X11/Xresources
+
+# set default mouse cursor
+xsetroot -cursor_name left_ptr
+
+#
+# launch programs
+#
+
+# input method
+export XMODIFIERS=@im=fcitx
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+
+# fix qt theme
+export GTK2_RC_FILES=$HOME/.gtkrc-2.0
+export QT_STYLE_OVERRIDE=GTK+
+
+# fix sxhkd with fish
+export SXHKD_SHELL=/bin/sh
+
+numlockx &
+xbanish &
+sxhkd -m -1 &
+polybar -r top-r &
+polybar -r top-l &
+wal -R &
+dunst &
+compton &
+fcitx &
+exec bspwm
+

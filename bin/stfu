@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Stuff I never really use but cannot delete either because of http://xkcd.com/530/
+osascript -e 'set volume output muted true'

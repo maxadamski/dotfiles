@@ -1,0 +1,158 @@
+; vim:ft=dosini
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[colors]
+background = #00000000
+foreground = #FFFFFFFF
+dimmed = ${xrdb:color11}
+alert = ${xrdb:color1}
+;foreground = #000000
+;dimmed = #444444
+;alert = #BD2C40
+;
+[bar]
+width = 100%
+height = 30
+radius = 0
+offset-y = 10
+fixed-center = true
+padding-right = 0
+padding-left = 0
+module-margin-right = 2
+module-margin-left = 1
+#background = #000000
+background = ${colors.background}
+foreground = ${colors.foreground}
+font-0 = SF UI Text:style=medium:pixelsize=14;hinting=slight;3
+font-1 = IPAGothic:pixelsize=14;hinting=slight;3
+font-2 = Material Icons:pixelsize=18;hinting=slight;6
+font-3 = Symbola:pixelsize=18;hinting=slight;0
+wm-restack = bspwm
+override-redirect = true
+enable-ipc = true
+tray-maxsize = 24
+tray-padding = 10
+
+[bar/top]
+inherit = bar
+modules-left = bspwm
+width = 10%
+offset-x = 10px
+font-0 = Symbola:pixelsize=18;hinting=none;3
+
+[bar/bottom]
+width = 3820px
+offset-x = 10px
+inherit = bar
+modules-center = date
+modules-right = cpu memory volume
+tray-position = right
+
+[module/bspwm]
+type = internal/bspwm
+format = <label-state>
+
+label-focused = ◆
+label-focused-foreground = ${colors.foreground}
+label-focused-padding = 2
+
+label-dimmed = ⬗
+label-dimmed-foreground = ${colors.foreground}
+label-dimmed-padding = 2
+
+label-occupied = ◈
+label-occupied-foreground = ${colors.foreground}
+label-occupied-padding = 2
+
+label-urgent = 🞜
+label-urgent-foreground = ${colors.foreground}
+label-urgent-padding = 2
+
+label-empty = ◇
+label-empty-foreground = ${colors.foreground}
+label-empty-padding = 2
+
+
+[module/mpd]
+type = internal/mpd
+label-song =  %title%
+format-playing = <label-song>
+icon-play = ⏵
+icon-pause = ⏸
+icon-stop = ⏹
+icon-prev = ⏮
+icon-next = ⏭
+icon-seekb = ⏪
+icon-seekf = ⏩
+label-song-maxlen = 40
+label-song-ellipsis = true
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+label-indicator-padding = 1
+label-indicator-background = ${colors.alert}
+
+[module/volume]
+type = internal/volume
+master-mixer = Master
+speaker-mixer = Front
+headphone-mixer = Headphone
+headphone-id = 13
+mapped = true
+format-volume = <ramp-volume> <label-volume>
+label-volume = %percentage%%
+format-muted = <label-muted>
+label-muted = 
+label-muted-foreground = ${colors.dimmed}
+ramp-volume-0 = 
+ramp-headphones-0 = 
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP1
+full-at = 100
+format-charging = <label-charging>
+label-charging =  %percentage%%
+format-discharging = <label-discharging>
+label-discharging = %{A:notify-battery:} %percentage%%%{A}
+label-full =  FULL
+
+[module/wireless-network]
+type = internal/network
+interface = wlp2s0
+interval = 3
+format-connected = <label-connected>
+label-connected = %{A1:wifi-info:} %signal%%%{A}
+format-disconnected = <label-disconnected>
+label-disconnected = 
+label-disconnected-foreground = ${colors.dimmed}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+label =   %percentage%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+label =   %gb_used% 
+
+[module/date]
+type = internal/date
+interval = 5
+time = %A, %B %I:%M %p
+time-alt = %A, %d-%m-%Y %I:%M %p
+label = %time%
+
+[module/username]
+type = custom/script
+exec = ~/bin/username
+interval = 90

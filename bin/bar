@@ -1,0 +1,115 @@
+#!/usr/bin/env fish
+
+function battery_info
+	echo (upower -i /org/freedesktop/UPower/devices/battery_BAT0)
+end
+
+function battery_percentage
+	echo (battery_info | \
+		grep -Po 'percentage:\\s+\\d+%' | \
+		grep -Po '\\d+')
+end
+
+function battery_energy_consumption
+	echo (battery_info | \
+		grep -Po 'energy-rate:\\s+\\d+.\\d+ W' | \
+		grep -Po '\\d+.\\d+')
+end
+
+function battery_remaining_hours
+	echo (battery_info | \
+		grep -Po 'time to empty:\\s+\\d+\.\\d+ hours' | \
+		grep -Po '\\d+\.\\d+')
+end
+
+function battery_state
+	echo (battery_info | \
+		grep -Po 'state:\\s+ \\w+' | \
+		grep -Po '\\w+$')
+end
+
+function date_time
+	echo (date +'%a, %d-%m-%Y %H:%M')
+end
+
+function date_time_alt
+	echo (date +'%A, %d %B %Y %H:%M')
+end
+
+function volume_percentage
+
+end
+
+function volume_muted
+
+end
+
+function volume_icon
+
+end
+
+function network_connected
+	if test (iw wlp2s0 link | grep -Po 'Not connected.')
+		echo 0
+	else
+		echo 1
+	end
+end
+
+function network_ssid
+	if test (network_connected)
+		echo (iw wlp2s0 link | grep -Po '(?<=SSID: ).+$')
+	else
+		echo null
+	end
+end
+
+function network_signal
+	if test (network_connected)
+		echo (iw wlp2s0 link | grep -Po '(?<=signal: )\\-?\\d+(?= dBm)')
+	else
+		echo -100
+	end
+end
+
+function dbm_to_percent
+	set -l dbm $argv[1]
+	if test $dbm -ge -20
+		echo 100
+	else if test $dbm -le -92
+		echo 1
+	else
+		echo (echo '-0.01929 * ('$dbm' + 92) * ('$dbm' - 52)' | bc -l)
+	end
+end
+
+function channel_muted
+	set -l channel $argv[1]
+	if test (amixer sget $channel | grep -o '\[off\]' | string join '')
+		echo 1
+	else
+		echo 0
+	end
+end
+
+echo time: (date_time)
+echo time alt: (date_time_alt)
+echo bspwm
+echo cpu
+echo - percentage: (echo '100 - '(vmstat 1 2|tail -1|awk '{print $15}') | bc)%
+echo battery
+echo - percentage: (battery_percentage)%
+echo - remaining: (battery_remaining_hours)h
+echo - consumption: (battery_energy_consumption)W
+echo - state: (battery_state)
+echo wifi
+echo - status: (network_connected)
+echo - ssid: (network_ssid)
+echo - signal: (network_signal)
+echo - percent: (dbm_to_percent (network_signal))
+echo audio:
+echo - master volume (vol g) 
+echo - master muted (channel_muted Master)
+echo - headphone muted (channel_muted Headphone)
+echo - speaker muted (channel_muted Speaker)
+

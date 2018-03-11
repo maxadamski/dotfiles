@@ -1,0 +1,349 @@
+#!/usr/bin/env bash
+
+DESKTOP=false
+LAPTOP=true
+
+BOOTSTRAP=true
+INSTALL_PYTHON_PACKAGES=true
+INSTALL_RUBY_PACKAGES=true
+CREATE_USER_FOLDERS=true
+INSTALL_USER_MEDIA=true
+SET_USER_THEME=true
+COMPILE_TEMPLATES=true
+TEMPLATE=".template/desktop.yml"
+INSTALL_USER_CONFIG=true
+INSTALL_USER_KEYS=true
+INSTALL_SYSTEM_CONFIGURATION=false
+SET_UP_SERVICES=true
+CHANGE_USER_SHELL=false
+
+if [ $BOOTSTRAP = true ]; then
+
+	if [ $LAPTOP = true ]; then
+		# Intel HD Graphics is glitchy on Linux >= 4.14
+		echo "[info] freezing kernel at 4.13"
+		sudo xbps-pkgdb -m hold linux
+		sudo xbps-install -Sy linux4.13 linux4.13-headers
+	fi
+
+	sudo xbps-install -Suy
+	sudo xbps-install -y void-repo-nonfree
+
+	if [ $DESKTOP = true ]; then
+		echo "[info] installing graphics drivers"
+		sudo xbps-install -y nvidia
+	fi
+
+	if [ $LAPTOP = true ]; then
+		echo "[info] installing graphics drivers"
+		sudo xbps-install -y xf86-video-nouveau xf86-video-intel
+	fi
+
+	echo "[info] installing core utils"
+	sudo xbps-install -y \
+		xtools \
+		git \
+		curl \
+		htop \
+		glances \
+		bluez \
+		udevil \
+		gnupg \
+		pass \
+		nftables \
+		calc \
+		alsa-utils \
+		pulseaudio \
+		pamixer \
+		pulsemixer \
+		apulse \
+		ConsoleKit2 \
+		fuse-exfat \
+		fuse-sshfs \
+		exfat-utils \
+		mpd \
+		mpc \
+		ncmpcpp \
+		ruby \
+		neovim \
+		fish-shell \
+		tmux \
+		ranger \
+		calcurse \
+		sc-im \
+		inxi \
+		ImageMagick \
+		unp \
+		unrar \
+		zip \
+		unzip \
+		shellcheck \
+		w3m \
+		w3m-img \
+		exiftool \
+		sct \
+		renameutils \
+		bitlbee \
+		bitlbee-facebook \
+		newsbeuter \
+		fdupes \
+		bashmount \
+		tomb \
+		pass-tomb \
+
+	echo "[info] installing X11"
+	sudo xbps-install -Sy \
+		xorg-minimal \
+		setxkbmap \
+		xrandr \
+		xrdb \
+		xset \
+		xsetroot \
+		xbanish \
+		numlockx \
+		mkfontscale \
+		mkfontdir
+
+	echo "[info] installing the desktop environment"
+	sudo xbps-install -y \
+		bspwm \
+		sxhkd \
+		polybar \
+		plank \
+		xlunch \
+		compton \
+		dunst \
+		rxvt-unicode \
+		urxvt-perls \
+		alacritty \
+		sxiv \
+		mpv \
+		neofetch \
+		zathura \
+		zathura-djvu \
+		zathura-ps \
+		zathura-pdf-mupdf \
+		mupdf \
+		baobab \
+		pavucontrol \
+		thunderbird \
+		qbittorrent \
+		libreoffice \
+		openjdk \
+		openjdk-jre \
+		virtualbox-ose \
+		uzbl \
+		uzbl-tabbed \
+
+	echo "[info] installing fonts and themes"
+	sudo xbps-install -y \
+		font-symbola \
+		font-inconsolata-otf \
+		font-fira-otf \
+		noto-fonts-ttf \
+		noto-fonts-emoji \
+		ipafont-fonts-otf \
+		xcursor-vanilla-dmz-aa \
+		papirus-icon-theme \
+		gtk-engine-murrine \
+		Adapta
+
+fi
+
+if [ $INSTALL_PYTHON_PACKAGES = true ]; then
+	sudo xbps-install -Sy \
+		python \
+		python-pip \
+		python3 \
+		python3-pip
+
+	pip3 install --user \
+		pywal \
+		pygments \
+		neovim \
+		ipython \
+		jupyter \
+		sqlalchemy
+fi
+
+if [ $INSTALL_RUBY_PACKAGES = true ]; then
+	sudo xbps-install -Sy ruby
+	gem install mustache --user-install
+fi
+
+
+if [ $CREATE_USER_FOLDERS = true ]; then
+	mkdir -p ~/{Desktop,Documents,Downloads,Pictures,Music,Videos}
+	mkdir -p ~/.local/{bin,etc,opt,share}
+	mkdir -p ~/.local/share/{themes,icons,fonts}
+
+	if [ ! -e ~/.themes ]; then
+		echo "symlinking themes into home directory"
+		ln -s ~/.local/share/themes ~/.themes
+	fi
+
+	if [ ! -e ~/.icons ]; then
+		echo "symlinking icons into home directory"
+		ln -s ~/.local/share/icons ~/.icons
+	fi
+
+	if [ ! -e ~/.fonts ]; then
+		echo "symlinking fonts into home directory"
+		ln -s ~/.local/share/fonts ~/.fonts
+	fi
+fi
+
+if [ $INSTALL_USER_MEDIA = true ]; then
+	echo "[info] install user media"
+	echo "install wallpapers"
+	install -Dm640 pictures/* ~/Pictures
+	echo "install user binaries"
+	install -Dm750 bin/* ~/.local/bin
+	echo "install fonts"
+	install -Dm640 fonts/* ~/.local/share/fonts
+	mkfontscale ~/.local/share/fonts
+	mkfontdir ~/.local/share/fonts
+	echo "refresh font cache"
+	fc-cache -fv
+	echo "[done] install user media"
+fi
+
+if [ $SET_USER_THEME = true ]; then
+	echo "adding wal to path"
+	PATH=~/.local/bin:$PATH
+	echo "setting color theme"
+	wal -i ~/Pictures/gencer.jpg
+fi
+
+if [ $COMPILE_TEMPLATES = true ]; then
+	PATH=~/.gem/ruby/2.5.0/bin:$PATH
+	alias template="cat ~/.cache/wal/colors.yml $TEMPLATE | mustache - "
+	template system/blacklist.conf > system/_blacklist.conf
+	template system/xorg.conf > system/_xorg.conf
+	template fish/config.fish > fish/_config.fish
+	template X11/xinitrc > X11/_xinitrc
+	template X11/Xresources > X11/_Xresources
+	template polybar/config > polybar/_config
+	template kitty/kitty.conf > kitty/_kitty.conf
+	template bspwm/bspwmrc > bspwm/_bspwmrc
+
+fi
+
+if [ $INSTALL_USER_CONFIG = true ]; then
+	echo "configure bash shell"
+	install -Dm750 shell/inputrc ~/.inputrc
+	install -Dm750 shell/bashrc ~/.bashrc
+	echo "configure fish"
+	mkdir -p ~/.config/fish/functions
+	install -Dm750 fish/_config.fish ~/.config/fish/config.fish
+	install -Dm750 fish/functions/*.fish ~/.config/fish/functions
+	echo "configure x11"
+	install -Dm750 X11/_xinitrc ~/.xinitrc
+	install -Dm750 X11/_Xresources ~/.config/X11/Xresources
+	echo "configure compton"
+	install -Dm750 compton/compton.conf ~/.config/compton.conf
+	echo "configure git"
+	install -Dm750 git/config ~/.gitconfig
+	install -Dm750 git/ignore ~/.gitignore
+	echo "configure gtk"
+	install -Dm750 gtk/gtkrc-3.0 ~/.config/gtk-3.0/settings.ini
+	install -Dm750 gtk/gtkrc-2.0 ~/.gtkrc-2.0
+	echo "configure mpd"
+	install -Dm750 mopidy/mopidy.conf ~/.config/mopidy/mopidy.conf
+	install -Dm750 mpd/mpd.conf ~/.config/mpd/mpd.conf
+	echo "configure mpv"
+	install -Dm750 mpv/input.conf ~/.config/mpv/input.conf
+	install -Dm750 mpv/mpv.conf ~/.config/mpv/mpv.conf
+	echo "configure ncmpcpp"
+	install -Dm750 ncmpcpp/bindings ~/.config/ncmpcpp/bindings
+	install -Dm750 ncmpcpp/config ~/.config/ncmpcpp/config
+	echo "configure neofetch"
+	install -Dm750 neofetch/config ~/.config/neofetch/config
+	echo "configure polybar"
+	install -Dm750 polybar/_config ~/.config/polybar/config
+	echo "configure rofi"
+	install -Dm750 rofi/config ~/.config/rofi/config
+	echo "configure qutebrowser"
+	install -Dm750 qutebrowser/config.py ~/.config/qutebrowser/config.py
+	echo "configure ranger"
+	install -Dm750 ranger/rc.conf ~/.config/ranger/rc.conf
+	install -Dm750 ranger/rifle.conf ~/.config/ranger/rifle.conf
+	install -Dm750 ranger/scope.sh ~/.config/ranger/scope.sh
+	echo "configure vim"
+	install -Dm750 vim/init.vim ~/.config/nvim/init.vim
+	echo "configure alacritty"
+	install -Dm750 alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
+	echo "configure kitty"
+	install -Dm750 kitty/_kitty.conf ~/.config/kitty/kitty.conf
+	echo "configure dunst"
+	install -Dm750 dunst/dunstrc ~/.config/dunst/dunstrc
+	echo "configure zathura"
+	install -Dm750 zathura/zathurarc ~/.config/zathura/zathurarc
+	echo "configure bspwm"
+	install -Dm750 bspwm/_bspwmrc ~/.config/bspwm/bspwmrc
+	echo "configure sxhkd"
+	install -Dm750 sxhkd/sxhkdrc ~/.config/sxhkd/sxhkdrc
+fi
+
+if [ $INSTALL_USER_KEYS = true ]; then
+	echo "[info] install user keys"
+	echo "install ssh keys"
+	install -Dm644 keychain/id_rsa.pub ~/.ssh/id_rsa.pub
+	install -Dm600 keychain/id_rsa ~/.ssh/id_rsa
+	echo "install gpg keys"
+	gpg --import keychain/gpg_public.key
+	gpg --import keychain/gpg_secret.key
+	echo "install wifi keys"
+	sudo install -Dm640 keychain/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+	echo "install eduroam certificates"
+	sudo mkdir -p /etc/certificates
+	sudo install -Dm644 keychain/adena-ca.pem /etc/certificates/
+	sudo install -Dm644 keychain/edu-ca.pem /etc/certificates/
+	sudo install -Dm600 keychain/eduroam.crt /etc/certificates/
+	sudo install -Dm600 keychain/eduroam.key /etc/certificates/
+	echo "install pass keyring"
+	git clone git@bitbucket.com:maxadamski/password-store ~/.password-store
+	echo "install mozilla programs"
+	cp -r keychain/mozilla ~/.mozilla
+	cp -r keychain/thunderbird ~/.thunderbird
+	echo "[done] install user keys"
+fi
+
+if [ $INSTALL_SYSTEM_CONFIGURATION = true ]; then
+	sudo install -Dm600 system/_blacklist.conf /etc/modprobe.d/blacklist.conf
+	sudo install -Dm644 system/grub /etc/default/grub
+	sudo install -Dm644 system/rc.conf /etc/rc.conf
+	sudo install -Dm640 system/_xorg.conf /etc/X11/xorg.conf
+	sudo install -Dm644 system/sshd_config /etc/ssh/sshd_config
+	sudo install -Dm644 system/tlp /etc/default/tlp
+	sudo update-grub
+fi
+
+
+if [ $SET_UP_SERVICES = true ]; then
+	echo "[info] setting up services"
+	echo "enable cgmanager"
+	sudo ln -s /etc/sv/cgmanager /var/service/
+	echo "enable consolekit"
+	sudo ln -s /etc/sv/consolekit /var/service/
+	echo "enable dbus"
+	sudo ln -s /etc/sv/dbus /var/service/
+	echo "enable alsa"
+	sudo ln -s /etc/sv/alsa /var/service/
+	echo "enable bluetoothd"
+	sudo ln -s /etc/sv/bluetoothd /var/service/
+	echo "disable agetty-tty4,5,6"
+	sudo rm /var/service/agetty-tty{4,5,6}
+	echo "[done] setting up services"
+fi
+
+if [ $CHANGE_USER_SHELL = true ]; then
+	echo "[info] changing user shell to fish"
+	chsh -s /usr/bin/fish
+fi
+
+echo "[note] Please manually install 'anaconda3', 'sbt', 'scala' to '~/.local/opt'"
+echo "[note] Please manually install 'cuda' to '/usr/opt'"
+echo "[note] Please install 'texlive' with xbps"
+echo "[note] Set the desired wallpaper with wal -i <image>"
+

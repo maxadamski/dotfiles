@@ -1,0 +1,8 @@
+# .bashrc
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+export PATH=$PATH:/opt/texlive/2017/bin/x86_64-linux
+alias ls='ls --color=auto'
+PS1='[\u@\h \W]\$ '

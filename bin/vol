@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+def round(vol)
+	m = vol / 10
+	r = vol % 10
+	if r < 3
+		r = 0
+	elsif r < 8
+		r = 5
+	else
+		r = 0
+		m += 1
+	end
+	10 * m + r
+end
+
+def amixer_get
+	master = `amixer -M sget Master`
+	vol = round master.lines[4].gsub(/^.*\[(?=\d+\%)/, '').gsub(/\%.*/, '').to_i
+	muted = master.lines[4].match(/\[off\]/) != nil
+	{:volume => vol, :muted => muted}
+end
+
+def amixer_set(arg)
+	`amixer -M sset Master #{arg}`
+end
+
+def _set(arg)
+	amixer_set arg 
+	status = amixer_get
+	if status[:volume] == 0
+		amixer_set 'mute'
+	else
+		amixer_set 'unmute'
+	end
+end
+
+def _status
+	status = amixer_get
+	volume, muted = status[:volume], status[:muted]
+	fdecor = if muted then '🔇' else '🔊' end
+	fvolume = if muted then 'MUTE' else "#{volume}%" end
+	puts "#{fdecor} #{fvolume}"
+end
+
+args = ARGF.argv
+cmd = args[0]
+
+if cmd == 't' || cmd == 'toggle'
+	amixer_set 'toggle'
+elsif cmd == 'm' || cmd == 'mute'
+	amixer_set 'mute'
+elsif cmd == 'u' || cmd == 'unmute'
+	amixer_set 'unmute'
+elsif cmd == 's' || cmd == 'set'
+	_set args[1]
+elsif cmd == 'g' || cmd == 'get'
+	_status
+else
+	puts "usage: vol (t oggle|m ute|u nmute|s et| g et)"
+end

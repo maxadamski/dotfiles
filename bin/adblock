@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+command=$1
+if test $command = on; then
+	mv /etc/hosts.ads.disabled /etc/hosts.ads
+	service dnsmasq restart
+elif test $command = off; then
+	mv /etc/hosts.ads /etc/hosts.ads.disabled
+	service dnsmasq restart
+else
+	echo 'Usage: adblock on|off'
+fi

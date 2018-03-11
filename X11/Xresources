@@ -1,0 +1,101 @@
+#define FONT_MONO SF Mono Nerd Font
+
+!-------------------------------------------
+! Xcursor
+
+Xcursor.theme: Vanilla-DMZ-AA
+Xcursor.size: 22
+
+!-------------------------------------------
+! XFT
+
+Xft.antialias:  true 
+Xft.autohint:   false 
+Xft.hinting:    true
+Xft.hintstyle:  hintslight
+Xft.lcdfilter:  lcddefault
+Xft.rgba:       rgb
+
+!-------------------------------------------
+! URxvt
+
+URxvt.font: xft:FONT_MONO:size=15,xft:IPAGothic,xft:NanumGothic,xft:Symbola,xft:MaterialIcons
+URxvt.internalBorder: 20
+URxvt.jumpScroll: true
+URxvt.dynamicColors: on
+URxvt.urgentOnBell: true
+URxvt.borderless: true
+URxvt.scrollBar: false
+URxvt.cursorUnderline: true
+URxvt.cursorBlink: true
+URxvt.underlineURLs: true
+URxvt.urlLauncher: firefox
+URxvt.inputMethod: ibus
+URxvt.preeditType: OverTheSpot
+!URxvt.background: rgba:0000/0000/0000/d200
+URxvt.transparent: false
+URxvt.depth: 32
+URxvt.iso14755: false
+URxvt.perl-ext-common: default,clipboard
+URxvt.keysym.C-C: perl:clipboard:copy
+URxvt.keysym.C-P: perl:clipboard:paste
+
+!-------------------------------------------
+! st
+!
+
+st.font: FONT_MONO:pixelsize=20:antialias=true:autohint=false
+st.borderpx: 20
+st.cursorshape: 4
+st.cursorthickness: 2
+st.cursorblinkstyle: 0
+st.cursorblinkontype: 0
+st.bold_font: 1
+st.xfps: 120
+st.actionfps: 60
+st.cwscale: 1.0
+st.chscale: 1.0
+st.termname: xterm-256color
+st.opacity: 250
+
+!-------------------------------------------
+! rofi
+
+rofi.fullscreen: false
+rofi.font: FONT_MONO 16
+rofi.terminal: sh
+rofi.width: 35 
+rofi.padding: 12 
+rofi.lines: 16 
+rofi.line-margin: 10
+rofi.separator-style: none 
+rofi.hide-scrollbar: false
+rofi.scrollbar-width: 2
+rofi.color-enabled: true
+rofi.bw: 0
+
+! ------------------------------------------
+! colors
+
+*foreground:   {{special.foreground}}
+*background:   {{special.background}}
+*borderColor:  {{special.background}}
+*cursorColor:  {{special.cursor}}
+
+*color0:  {{colors.color0}}
+*color1:  {{colors.color1}}
+*color2:  {{colors.color2}}
+*color3:  {{colors.color3}}
+*color4:  {{colors.color4}}
+*color5:  {{colors.color5}}
+*color6:  {{colors.color6}}
+*color7:  {{colors.color7}}
+*color8:  {{colors.color8}}
+*color9:  {{colors.color9}}
+*color10: {{colors.color10}}
+*color11: {{colors.color11}}
+*color12: {{colors.color12}}
+*color13: {{colors.color13}}
+*color14: {{colors.color14}}
+*color15: {{colors.color15}}
+

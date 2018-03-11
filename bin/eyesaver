@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+redshift -l 52.40:16.92 -t 5500K:2000K
+

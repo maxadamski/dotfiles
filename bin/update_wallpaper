@@ -1,0 +1,13 @@
+#!/usr/bin/env fish
+# sets image `~/Pictures/.wallpaper.{jpg,jpeg,png}` as the current wallpaper via `feh`
+
+for ext in jpg jpeg png
+	if test -f ~/Pictures/.wallpaper.$ext
+		feh --bg-fill ~/Pictures/.wallpaper.$ext
+		# no problem here
+		exit 0
+	end
+end
+
+# no wallpaper found!
+exit 1

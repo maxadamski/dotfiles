@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [ -f ~/.cache/wal/colors.sh ]; then
+	. ~/.cache/wal/colors.sh
+fi
+
+dunst \
+	-lb "${color0:-#FFFFFF}" \
+	-nb "${color0:-#FFFFFF}" \
+	-cb "${color0:-#FFFFFF}" \
+	-lf "${color15:-#000000}" \
+	-bf "${color15:-#000000}" \
+	-cf "${color15:-#000000}" \
+	-nf "${color15:-#000000}" \
+	-geometry "450x5-0-38" \
+	-transparency 10 \
+	-notification_height 0 \
+	-separator_height 1 \
+	-padding 8 \
+	-horizontal_padding 8 \
+	-frame_width 0 \
+	-sort yes \
+	-idle_threshold 120 \
+	-font "SF Mono 14" \
+	-line_height 0
+

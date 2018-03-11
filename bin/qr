@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+qrencode -s 4 -m 8 -o - $1
