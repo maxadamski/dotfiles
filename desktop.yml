@@ -5,7 +5,7 @@ x11:
 
 bspwm:
     desktop_names: "1 2 3 4 5 6 0"
-    window_padding: [25, 20, 20, 20]
+    window_padding: 20
     window_gap: 30
     border_width: 1
 
