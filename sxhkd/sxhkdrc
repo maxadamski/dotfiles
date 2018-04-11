@@ -3,7 +3,7 @@
 #
 
 super + Return
-	~/.local/opt/kitty/bin/kitty --single-instance --instance-group=desktop
+	~/.local/opt/kitty/bin/kitty
 
 super + shift + Return
 	urxvt
@@ -26,8 +26,8 @@ super + {t,alt + t,s,f}
 super + {_,shift +} {Left,Down,Up,Right}
 	bspc node --{move,resize bottom_right} {-64 0,0 +64,0 -64,+64 0}
 
-super + alt + {Left,Down,Up,Right}
-	bspc node --presel-dir {west,south,north,east}
+super + alt + space
+	bspc node --presel-dir cancel
 
 super + {_,alt +} r
 	bspc node @/ --rotate {90,-90}
@@ -53,6 +53,9 @@ super + i ; {n,p,b}
 
 super + o ; {m,p}
 	urxvt -name floating -geometry 100x40 -e {ncmpcpp,password}
+
+super + {_,shift +} Tab
+	bspc {node,desktop} -f last
 
 #super + Escape ; {d,r,s,l,m}
 #	sys {d,r,s,l,sd}

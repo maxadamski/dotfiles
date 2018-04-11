@@ -8,8 +8,6 @@ xrandr --output eDP1 --set "Broadcast RGB" "Full"
 xrandr --dpi {{x11.dpi}}
 
 setxkbmap pl dvp
-setxkbmap -option caps:swapescape
-setxkbmap -option terminate:ctrl_alt_bksp
 {{#is_laptop}}
 setxkbmap -option altwin:swap_lalt_lwin
 {{/is_laptop}}
@@ -41,19 +39,15 @@ export QT_IM_MODULE=fcitx
 
 # fix qt theme
 export GTK2_RC_FILES=$HOME/.gtkrc-2.0
-export QT_STYLE_OVERRIDE=GTK+
-
-# fix sxhkd with fish
+export QT_QPA_PLATFORMTHEME=qt5ct
 export SXHKD_SHELL=/bin/sh
 
 numlockx &
-xbanish &
 sxhkd -m -1 &
-polybar -r top-r &
-polybar -r top-l &
+polybar -r top &
+polybar -r bottom &
 wal -R &
 dunst &
 compton &
-fcitx &
+#fcitx &
 exec bspwm
-

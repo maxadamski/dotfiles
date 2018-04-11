@@ -1,7 +1,5 @@
 keychain/*
-.static/*
-_*
-
+share/*
 
 ### macOS ###
 *.DS_Store

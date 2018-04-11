@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
+# vim: ft=sh
 
 bspc monitor --reset-desktops {{bspwm.desktop_names}}
-
-PADDING_H=30
-PADDING_V=30
 
 bspc config border_width   {{bspwm.border_width}}
 bspc config window_gap     {{bspwm.window_gap}}
 
-bspc config top_padding    {{bspwm.window_padding_y}}
-bspc config bottom_padding {{bspwm.window_padding_y}}
-bspc config right_padding  {{bspwm.window_padding_x}}
-bspc config left_padding   {{bspwm.window_padding_x}}
+bspc config top_padding    {{bspwm.window_padding.0}}
+bspc config bottom_padding {{bspwm.window_padding.1}}
+bspc config right_padding  {{bspwm.window_padding.2}}
+bspc config left_padding   {{bspwm.window_padding.3}}
 
 bspc config split_ratio 0.5
 bspc config borderless_monocle true
@@ -22,4 +20,9 @@ bspc config normal_border_color   "{{color0}}"
 bspc config focused_border_color  "{{color15}}"
 bspc config presel_feedback_color "{{color2}}"
 bspc config active_border_color   "{{color8}}"
+
+floating=(mpv Sxiv qBittorrent sfml-devel)
+for class in $floating; do
+	bspc rule -a $class state=floating
+done
 

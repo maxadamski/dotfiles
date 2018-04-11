@@ -1,0 +1,195 @@
+#!/usr/bin/env bash
+
+shopt -s expand_aliases
+RICE_PATH=~/Documents/ricecooker/src/ricecooker.sh
+TEMPLATE_FUNCTION='template:mustache'
+TEMPLATE_HASH=(.template/colors.yml)
+test -f "$RICE_PATH" && . "$RICE_PATH"
+alias run='rice::exec'
+alias add='rice::add'
+alias pkg='run sudo xbps-install -Sy'
+
+add setup:void:desktop
+setup:void:desktop() {
+	TEMPLATE_HASH+=(.template/desktop.yml)
+}
+
+add setup:void:laptop
+setup:void:laptop() {
+	TEMPLATE_HASH+=(.template/laptop.yml)
+}
+
+add bootstrap:void -x
+bootstrap:void() {
+	pkg -u
+	pkg void-repo-multilib void-repo-nonfree
+}
+
+add bootstrap:void:laptop -x
+bootstrap:void:laptp() {
+	run sudo xbps-pkgdb -m hold linux
+	pkg linux4.13 linux4.13-headers
+}
+
+add system_packages:void
+system_packages:void() {
+	pkg \
+		Adapta ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
+		alacritty alsa-tools alsa-utils apulse atool baobab bluez bsdtar \
+		bspwm calc calcurse cgdb cgmanager clang cmake compton-git conky \
+		cryptsetup curl curlftpfs dunst exfat-dkms exfat-utils exiftool fcitx \
+		fcitx-configtool fcitx-mozc feh filezilla firefox fish-shell flex \
+		font-fira-otf font-inconsolata-otf font-symbola fontmanager \
+		fuse-sshfs gcolor2 gengetopt gftp git glances gnupg gparted \
+		highlight htop inxi ipafont-fonts-otf kcov mdadm mozc mpc mpd mpv \
+		mupdf mkfontdir mkfontscale ncmpcpp neofetch neovim nftables \
+		noto-fonts-emoji noto-fonts-ttf ntfs-3g numlockx openjdk p7zip \
+		pamixer papirus-icon-theme pass pavucontrol plank pmount polybar \
+		pulsemixer pylint python python-pip python3 python3-pip qbittorrent \
+		qjackctl qsynth qt5-styleplugins qt5ct ranger renameutils retroarch \
+		rofi rstudio ruby rust rxvt-unicode sc-im scrot sct setxkbmap \
+		shellcheck subversion sxhkd sxiv thunderbird tig tmux udevil unp \
+		unrar unzip urxvt-perls uzbl uzbl-tabbed w3m w3m-img wine-32bit \
+		xbanish xboxdrv xcompmgr xcursor-vanilla-dmz-aa xdotool xev \
+		xf86-input-joystick xlunch xmodmap xorg-minimal xrandr xrdb xset \
+		xsetroot xtools youtube-dl zathura zathura-djvu zathura-pdf-mupdf \
+		zathura-ps zip
+}
+
+add system_packages:void:desktop
+system_packages:void:desktop() {
+	pkg \
+		nvidia
+}
+
+add system_packages:void:laptop
+system_packages:void:laptop() {
+	pkg \
+		xf86-video-nouveau \
+		xf86-video-intel \
+		tlp
+}
+
+add system_packages_other:void -x
+system_packages_other:void() {
+	pkg \
+		virtualbox-ose \
+		libreoffice \
+		texlive-bin
+}
+
+add system_config:void
+system_config:void() {
+	sudo tomplate -m 600 system/blacklist.conf.mustache /etc/modprobe.d/blacklist.conf
+	sudo template -m 644 system/grub.mustache /etc/default/grub
+	sudo template -m 640 X11/xorg.conf.mustache /etc/X11/xorg.conf
+	run sudo install -Dm644 system/rc.conf /etc/rc.conf
+	run sudo install -Dm644 system/sshd_config /etc/ssh/sshd_config
+	run sudo update-grub
+}
+
+add system_config:void:laptop
+system_config:void:laptop() {
+	run sudo install -Dm644 system/tlp /etc/default/tlp
+}
+
+add system_keychain:void -x
+system_keychain:void() {
+	run sudo mkdir -p /etc/certificates
+	run sudo install -Dm640 keychain/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+	run sudo install -Dm644 keychain/adena-ca.pem /etc/certificates/
+	run sudo install -Dm644 keychain/edu-ca.pem /etc/certificates/
+	run sudo install -Dm600 keychain/eduroam.crt /etc/certificates/
+	run sudo install -Dm600 keychain/eduroam.key /etc/certificates/
+}
+
+add system_services:void
+system_services:void() {
+	run sudo ln -s /etc/sv/alsa /var/service/
+	run sudo ln -s /etc/sv/bluetoothd /var/service/
+	run sudo ln -s /etc/sv/cgmanager /var/service/
+	run sudo ln -s /etc/sv/consolekit /var/service/
+	run sudo ln -s /etc/sv/dbus /var/service/
+}
+
+add system_services:void:laptop
+system_services:void:laptop() {
+	run sudo ln -s /etc/sv/tlp /var/service/
+}
+
+add user_packages
+user_packages() {
+	run pip3 install --user \
+		pywal pygments neovim ipython jupyter sqlalchemy Faker wheel
+
+	run gem install mustache --user-install
+}
+
+add user_documents -x
+user_documents() {
+	run mkdir -p ~/{Desktop,Documents,Downloads,Pictures,Music,Videos}
+	run mkdir -p ~/.local/{bin,etc,opt,share}
+	run mkdir -p ~/.local/share/{themes,icons,fonts}
+
+	test ! -e ~/.themes && run ln -s ~/.local/share/themes ~/.themes
+	test ! -e ~/.icons  && run ln -s ~/.local/share/icons ~/.icons
+	test ! -e ~/.fonts  && run ln -s ~/.local/share/fonts ~/.fonts
+
+	run install -Dm640 .static/fonts/* ~/.local/share/fonts
+	run install -Dm640 .static/pictures/* ~/Pictures
+	run mkfontscale ~/.local/share/fonts
+	run mkfontdir ~/.local/share/fonts
+	run fc-cache -fv
+}
+
+add user_config
+user_config() {
+	template -m 750 fish/config.fish.mustache ~/.config/fish/config.fish
+	template -m 750 X11/xinitrc.mustache ~/.xinitrc
+	template -m 640 X11/Xresources.mustache ~/.config/X11/Xresources
+	template -m 640 kitty/kitty.conf.mustache ~/.config/kitty/kitty.conf
+	template -m 640 polybar/config.mustache ~/.config/polybar/config
+	template -m 750 bspwm/bspwmrc.mustache ~/.config/bspwm/bspwmrc
+	template -m 640 gtk/gtkrc-3.0.mustache ~/.config/gtk-3.0/settings.ini
+	template -m 640 gtk/gtkrc-2.0.mustache ~/.gtkrc-2.0
+	template -m 640 zathura/zathurarc.mustache ~/.config/zathura/zathurarc
+	template -m 640 rofi/config.mustache ~/.config/rofi/config
+	template -m 640 dunst/dunstrc.mustache ~/.config/dunst/dunstrc
+
+	run ln -s fish/functions ~/.config/fish/functions
+	run ln -s bin ~/.local/bin
+	run ln -s shell/inputrc ~/.inputrc
+	run ln -s shell/bashrc ~/.bashrc
+	run ln -s compton/compton.conf ~/.config/compton.conf
+	run ln -s git/config ~/.gitconfig
+	run ln -s git/ignore ~/.gitignore
+	run ln -s mopidy/mopidy.conf ~/.config/mopidy/mopidy.conf
+	run ln -s mpd/mpd.conf ~/.config/mpd/mpd.conf
+	run ln -s mpv/input.conf ~/.config/mpv/input.conf
+	run ln -s mpv/mpv.conf ~/.config/mpv/mpv.conf
+	run ln -s ncmpcpp/bindings ~/.config/ncmpcpp/bindings
+	run ln -s ncmpcpp/config ~/.config/ncmpcpp/config
+	run ln -s neofetch/config ~/.config/neofetch/config
+	run ln -s qutebrowser/config.py ~/.config/qutebrowser/config.py
+	run ln -s ranger/rc.conf ~/.config/ranger/rc.conf
+	run ln -s ranger/rifle.conf ~/.config/ranger/rifle.conf
+	run ln -s ranger/scope.sh ~/.config/ranger/scope.sh
+	run ln -s vim/init.vim ~/.config/nvim/init.vim
+	run ln -s sxhkd/sxhkdrc ~/.config/sxhkd/sxhkdrc
+}
+
+add user_keychain -x
+user_keychain() {
+	run install -Dm644 keychain/id_rsa.pub ~/.ssh/id_rsa.pub
+	run install -Dm600 keychain/id_rsa ~/.ssh/id_rsa
+	run gpg --import keychain/gpg_public.key
+	run gpg --import keychain/gpg_secret.key
+	run git clone git@bitbucket.com:maxadamski/password-store ~/.password-store
+}
+
+add user_keychain:void -x
+user_keychain:void() {
+	run cp -r keychain/mozilla ~/.mozilla
+	run cp -r keychain/thunderbird ~/.thunderbird
+}
+

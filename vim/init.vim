@@ -14,7 +14,7 @@ if &shell =~# 'fish$'
 	set shell=bash
 end
 
-"-- Use True Color
+"-- Use truecolor
 set t_Co=256
 if has('termguicolors')
 	set termguicolors
@@ -38,7 +38,6 @@ endif
 "- Plugins
 "--
 
-"-- Install plug.vim if not present
 if has('nvim')
 	if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 		silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim 
@@ -57,10 +56,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim'
-Plug 'zchee/deoplete-clang'
+"Plug 'zchee/deoplete-clang'
 Plug 'zchee/deoplete-jedi'
 Plug 'lervag/vimtex'
 Plug 'gabrielelana/vim-markdown'
+Plug 'JamshedVesuna/vim-markdown-preview', { 'branch': 'bugfix/firefox' }
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'Soares/fish.vim'
 Plug 'junegunn/goyo.vim'
@@ -68,6 +68,7 @@ Plug 'junegunn/limelight.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox'
+Plug 'jnurmine/Zenburn'
 Plug 'arcticicestudio/nord-vim'
 Plug 'mhartington/Oceanic-Next'
 
@@ -102,8 +103,8 @@ set list
 
 au VimEnter * :set showtabline=0
 
-colorscheme OceanicNext
-let g:airline_theme = 'oceanicnext'
+colorscheme zenburn
+let g:airline_theme = 'minimalist'
 
 "set background=dark
 let g:oceanic_next_terminal_bold = 1
@@ -112,8 +113,8 @@ let g:oceanic_next_terminal_italic = 1
 "make the background transparent
 hi Normal guibg=NONE ctermbg=NONE
 hi LineNr guibg=NONE ctermbg=NONE
-hi NonText guibg=NONE ctermbg=NONE
-hi EndOfBuffer guibg=NONE ctermbg=NONE
+"hi NonText guibg=NONE ctermbg=NONE
+"hi EndOfBuffer guibg=NONE ctermbg=NONE
 
 "--
 "- Keybindings
@@ -161,9 +162,12 @@ inoremap <Right> <Nop>
 
 "-- Airline
 let g:airline_powerline_fonts = 1
-let g:airline_skip_empty_sections = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+" hide ugly orange section
+let g:airline_skip_empty_sections = 1
+let g:airline_section_warning = ''
+let g:airline_section_error = ''
 
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
@@ -192,13 +196,24 @@ else
 	let g:airline_symbols.readonly = '✖︎'
 end
 
+"-- vim-pandoc/vim-pandoc
+"let g:pandoc#modules#disabled = ["folding", "spell"]
+let g:markdown_enable_spell_checking = 0
+
 "-- deoplete
 let g:deoplete#enable_at_startup = 1
 
 "-- deoplete/clang
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang/5.0.1/include/'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/clang/4.0.1/include/'
 
 "-- vimtex
 let g:vimtex_view_method = 'mupdf'
 
+"-- markdown
+"let g:vim_markdown_preview_hotkey='<localleader>lv'
+let g:vim_markdown_preview_pandoc=1
+"let g:vim_markdown_preview_toggle=3
+"let g:vim_markdown_preview_github=1
+let g:vim_markdown_preview_use_xdg_open=1
+let g:vim_markdown_preview_browser='firefox'
