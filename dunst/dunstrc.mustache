@@ -1,9 +1,6 @@
 # vim: ft=cfg
 
 [global]
-    ### Display ###
-
-    # Which monitor should the notifications be displayed on.
     monitor = 0
 
     # Display notification on focused monitor.  Possible modes are:
@@ -87,7 +84,7 @@
 
     ### Text ###
 
-    font = SF Mono 14
+    font = {{font-mono}} {{dunst.font-size}}
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -220,9 +217,9 @@
 #    summary = "foobar"
 #    format = ""
 
-[brightness]
+[system_info]
     # This notification will not be saved in history
-    summary = "Brightness"
+    summary = "System Information"
     history_ignore = yes
 
 #[signed_on]

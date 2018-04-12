@@ -8,7 +8,7 @@ test -f "$RICE_PATH" && . "$RICE_PATH"
 rice_transaction_break_on_fail=false
 alias run='rice::exec'
 alias add='rice::add'
-alias pkg='run sudo xbps-install -Sy'
+alias pkg='sudo xbps-install -Sy'
 export PATH=~/.gem/ruby/2.5.0/bin:$PATH
 
 add setup:void:desktop -m
@@ -37,7 +37,7 @@ add system_packages:void
 system_packages:void() {
 	pkg \
 		Adapta ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
-		alacritty alsa-tools alsa-utils apulse atool baobab bluez bsdtar \
+		alsa-tools alsa-utils apulse atool baobab bluez bsdtar \
 		bspwm calc calcurse cgdb cgmanager clang cmake compton-git conky \
 		cryptsetup curl curlftpfs dunst exfat-dkms exfat-utils exiftool fcitx \
 		fcitx-configtool fcitx-mozc feh filezilla firefox fish-shell flex \
@@ -140,21 +140,21 @@ user_documents() {
 
 	run install -Dm640 .static/fonts/* ~/.local/share/fonts
 	run install -Dm640 .static/pictures/* ~/Pictures
-	run mkfontscale ~/.local/share/fonts
-	run mkfontdir ~/.local/share/fonts
-	run fc-cache -fv
+	mkfontscale ~/.local/share/fonts
+	mkfontdir ~/.local/share/fonts
+	fc-cache -fv
 }
 
 add user_config
 user_config() {
 	template -m 750 fish/config.fish.mustache ~/.config/fish/config.fish
-	template -L -m 750 X11/xinitrc.mustache ~/.xinitrc
+	template -m 750 -L X11/xinitrc.mustache ~/.xinitrc
 	template -m 640 X11/Xresources.mustache ~/.config/X11/Xresources
 	template -m 640 kitty/kitty.conf.mustache ~/.config/kitty/kitty.conf
 	template -m 640 polybar/config.mustache ~/.config/polybar/config
 	template -m 750 bspwm/bspwmrc.mustache ~/.config/bspwm/bspwmrc
-	template -L -m 640 gtk/gtkrc-3.0.mustache ~/.config/gtk-3.0/settings.ini
-	template -L -m 640 gtk/gtkrc-2.0.mustache ~/.gtkrc-2.0
+	template -m 640 -L gtk/gtkrc-3.0.mustache ~/.config/gtk-3.0/settings.ini
+	template -m 640 -L gtk/gtkrc-2.0.mustache ~/.gtkrc-2.0
 	template -m 640 zathura/zathurarc.mustache ~/.config/zathura/zathurarc
 	template -m 640 rofi/config.mustache ~/.config/rofi/config
 	template -m 640 dunst/dunstrc.mustache ~/.config/dunst/dunstrc

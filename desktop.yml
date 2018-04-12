@@ -1,13 +1,27 @@
 is_desktop: true
 
+screen:
+    dpi: 109
+    x: 3840
+    y: 2160
+
 x11:
     dpi: 109
 
 bspwm:
     desktop_names: "1 2 3 4 5 6 0"
-    window_padding: 20
+    window_padding:
+        top: 20
+        right: 20
+        bottom: 20
+        left: 20
     window_gap: 30
     border_width: 1
 
 polybar:
-    none: none
+    bar-right-width: 3820
+    bar-height: 20
+    modules-right: cpu memory volume
+    font-size:
+        latin: 14
+        symbol: 18

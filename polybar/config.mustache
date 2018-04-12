@@ -9,49 +9,45 @@ margin-bottom = 0
 
 [colors]
 background = #00000000
-foreground = #FFFFFFFF
-dimmed = ${xrdb:color11}
-alert = ${xrdb:color1}
-;foreground = #000000
-;dimmed = #444444
-;alert = #BD2C40
+foreground = {{special.background}}
+dimmed = {{special.background}}
+alert = {{colors.color1}}
 ;
 [bar]
 width = 100%
-height = 30
+height = {{polybar.bar-height}}
 radius = 0
-offset-y = 10
+offset-y = {{polybar.bar-padding-top}}
 fixed-center = true
 padding-right = 0
 padding-left = 0
 module-margin-right = 2
 module-margin-left = 1
-#background = #000000
 background = ${colors.background}
 foreground = ${colors.foreground}
-font-0 = SF UI Text:style=medium:pixelsize=14;hinting=slight;3
-font-1 = IPAGothic:pixelsize=14;hinting=slight;3
-font-2 = Material Icons:pixelsize=18;hinting=slight;6
-font-3 = Symbola:pixelsize=18;hinting=slight;0
+font-0 = SF UI Text:style=medium:pixelsize={{polybar.font-size.latin}};hinting=slight;3
+font-1 = IPAGothic:pixelsize={{polybar.font-size.latin}};hinting=slight;3
+font-2 = Material Icons:pixelsize={{polybar.font-size.symbol}};hinting=slight;6
+font-3 = Symbola:pixelsize={{polybar.font-size.symbol}};hinting=slight;0
 wm-restack = bspwm
 override-redirect = true
 enable-ipc = true
 tray-maxsize = 24
 tray-padding = 10
 
-[bar/top]
+[bar/left]
 inherit = bar
 modules-left = bspwm
-width = 10%
-offset-x = 10px
-font-0 = Symbola:pixelsize=18;hinting=none;3
+width = 500px
+offset-x = 0px
+font-0 = Symbola:pixelsize={{polybar.font-size.symbol}};hinting=none;3
 
-[bar/bottom]
-width = 3820px
+[bar/right]
+width = {{polybar.bar-right-width}}px
 offset-x = 10px
 inherit = bar
 modules-center = date
-modules-right = cpu memory volume
+modules-right = {{polybar.modules-right}}
 tray-position = right
 
 [module/bspwm]
@@ -102,9 +98,9 @@ label-indicator-background = ${colors.alert}
 [module/volume]
 type = internal/volume
 master-mixer = Master
-speaker-mixer = Front
-headphone-mixer = Headphone
-headphone-id = 13
+;speaker-mixer = Front
+;headphone-mixer = Headphone
+;headphone-id = 13
 mapped = true
 format-volume = <ramp-volume> <label-volume>
 label-volume = %percentage%%
@@ -112,7 +108,7 @@ format-muted = <label-muted>
 label-muted = 
 label-muted-foreground = ${colors.dimmed}
 ramp-volume-0 = 
-ramp-headphones-0 = 
+;ramp-headphones-0 = 
 
 [module/battery]
 type = internal/battery

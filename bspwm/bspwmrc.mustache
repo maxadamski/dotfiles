@@ -6,10 +6,10 @@ bspc monitor --reset-desktops {{bspwm.desktop_names}}
 bspc config border_width   {{bspwm.border_width}}
 bspc config window_gap     {{bspwm.window_gap}}
 
-bspc config top_padding    {{bspwm.window_padding}}
-bspc config bottom_padding {{bspwm.window_padding}}
-bspc config right_padding  {{bspwm.window_padding}}
-bspc config left_padding   {{bspwm.window_padding}}
+bspc config top_padding    {{bspwm.window_padding.top}}
+bspc config bottom_padding {{bspwm.window_padding.bottom}}
+bspc config right_padding  {{bspwm.window_padding.right}}
+bspc config left_padding   {{bspwm.window_padding.left}}
 
 bspc config split_ratio 0.5
 bspc config borderless_monocle true
@@ -22,7 +22,7 @@ bspc config presel_feedback_color "{{colors.color2}}"
 bspc config active_border_color   "{{colors.color8}}"
 
 floating=(mpv Sxiv qBittorrent sfml-devel)
-for class in $floating; do
+for class in "${floating[@]}"; do
 	bspc rule -a $class state=floating
 done
 

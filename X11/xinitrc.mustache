@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# vim: ft=sh
 
 #
 # configure x11
@@ -44,10 +45,10 @@ export SXHKD_SHELL=/bin/sh
 
 numlockx &
 sxhkd -m -1 &
-polybar -r top &
-polybar -r bottom &
-wal -R &
 dunst &
 compton &
-#fcitx &
+xbacklight -set 60
+update_wallpaper
+polybar -r right &
+polybar -r left &
 exec bspwm

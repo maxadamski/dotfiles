@@ -1,12 +1,10 @@
 ! vim: ft=xdefaults
 
-#define FONT_MONO SF Mono Nerd Font
-
 !-------------------------------------------
 ! Xcursor
 
-Xcursor.theme: Vanilla-DMZ-AA
-Xcursor.size: 22
+Xcursor.theme: {{cursor-theme}}
+Xcursor.size: {{cursor-size}}
 
 !-------------------------------------------
 ! XFT
@@ -14,15 +12,15 @@ Xcursor.size: 22
 Xft.dpi:        {{x11.dpi}}
 Xft.antialias:  true 
 Xft.autohint:   false 
-Xft.hinting:    true
-Xft.hintstyle:  hintslight
+Xft.hinting:    {{hint}}
+Xft.hintstyle:  {{hint-style}}
 Xft.lcdfilter:  lcddefault
 Xft.rgba:       rgb
 
 !-------------------------------------------
 ! URxvt
 
-URxvt.font: xft:FONT_MONO:size=15,xft:IPAGothic,xft:NanumGothic,xft:Symbola,xft:MaterialIcons
+URxvt.font: xft:{{font-mono}}:size={{urxvt.font-size}},xft:{{font-jpn}},xft:{{font-kor}},xft:{{font-sym}},xft:{{font-ico}}
 URxvt.internalBorder: 20
 URxvt.jumpScroll: true
 URxvt.dynamicColors: on
@@ -47,7 +45,7 @@ URxvt.keysym.C-P: perl:clipboard:paste
 ! st
 !
 
-st.font: FONT_MONO:pixelsize=20:antialias=true:autohint=false
+st.font: {{font-mono}}:pixelsize={{st.font-size}}:antialias=true:autohint=false
 st.borderpx: 20
 st.cursorshape: 4
 st.cursorthickness: 2
@@ -65,7 +63,7 @@ st.opacity: 250
 ! rofi
 
 rofi.fullscreen: false
-rofi.font: FONT_MONO 16
+rofi.font: {{font-mono}} {{rofi.font-size}}
 rofi.terminal: sh
 rofi.width: 35 
 rofi.padding: 12 

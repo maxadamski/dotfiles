@@ -11,9 +11,6 @@ super + shift + Return
 super + @space
 	rofi -show run
 
-#alt + @space
-#	id=$(cat /tmp/scratchid);bspc node $id --flag hidden;bspc node --focus $id
-
 super + q
 	bspc node --close
 
@@ -57,29 +54,28 @@ super + o ; {m,p}
 super + {_,shift +} Tab
 	bspc {node,desktop} -f last
 
-#super + Escape ; {d,r,s,l,m}
-#	sys {d,r,s,l,sd}
-
 #
 # media keys
 #
 
-XF86Audio{Lower,Raise}Volume
-	vol s 5%{-,+}
-#	aplay ~/.local/share/sounds/pop.wav
-
-#XF86AudioMute
-#	vol t
-	
 XF86Audio{Prev,Play,Next} 
 	mpc {prev,toggle,next}
 
 super + m ; {p,t,n,s}
 	mpc {prev,toggle,next,stop}
 
+XF86Audio{Lower,Raise}Volume
+	volume {dec,inc} --mixer Master --step 5 --auto-toggle
+
+shift + XF86Audio{Lower,Raise}Volume
+	volume set {20,80} --mixer Master --notify
+
+XF86AudioMute
+	volume toggle --mixer Master --notify
+
 XF86MonBrightness{Down,Up}
-	xbacklight -{dec,inc} 5
+	brightness {dec,inc} -s 10 -t 200
 
 shift + XF86MonBrightness{Down,Up}
-	xbacklight -set {1,100}
+	brightness set {1,100} -t 400 -n
 

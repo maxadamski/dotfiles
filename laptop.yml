@@ -1,13 +1,69 @@
 is_laptop: true
 
+light-widget-theme: Adwaita
+dark-widget-theme: Adapta-Nokto-Eta
+light-icon-theme: Papirus-Light
+qt-widget-theme: Fusion
+icon-theme: Papirus-Adapta-Nokto
+cursor-theme: Vanilla-DMZ-AA
+cursor-size: 22
+font-sans: SF UI Text
+font-mono: Inconsolata
+font-jpn: IPAGothic
+font-kor: NanumGothic
+font-ico: Material Icons
+font-sym: Symbola
+
+gtk:
+    widget-theme: Adapta-Nokto-Eta
+    icon-theme: Papirus-Adapta-Nokto
+    font-size: 12
+
+font:
+    hint: false
+    hint-style: hintnone
+
+kitty:
+    font-size: 13
+
+urxvt:
+    font-size: 15
+
+st:
+    font-size: 20
+
+rofi:
+    font-size: 16
+
+dunst:
+    font-size: 14
+
+zathura:
+    font-size: 12
+
+screen:
+    dpi: 109
+    x: 1920
+    y: 1080
+
 x11:
     dpi: 96
 
 bspwm:
     desktop_names: "1 2 3 4 5 6 0"
-    window_padding: 30
-    window_gap: 10
     border_width: 1
+    window_gap: 10
+    window_padding: 
+        top: 25
+        right: 5
+        bottom: 5
+        left: 5
 
 polybar:
-    none: none
+    bar-right-width: 1900
+    bar-padding-top: 7.5
+    bar-height: 20
+    modules-right: cpu memory battery wireless-network volume
+    font-size:
+        latin: 13
+        symbol: 18
