@@ -1,5 +1,9 @@
 ; vim:ft=dosini
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; GLOBAL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 [settings]
 screenchange-reload = true
 
@@ -12,12 +16,16 @@ background = #00000000
 foreground = {{special.background}}
 dimmed = {{special.background}}
 alert = {{colors.color1}}
-;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; BAR
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 [bar]
 width = 100%
-height = {{polybar.bar-height}}
+height = {{polybar.bar.height}}
 radius = 0
-offset-y = {{polybar.bar-padding-top}}
+offset-y = {{polybar.bar.padding-y}}
 fixed-center = true
 padding-right = 0
 padding-left = 0
@@ -25,10 +33,10 @@ module-margin-right = 2
 module-margin-left = 1
 background = ${colors.background}
 foreground = ${colors.foreground}
-font-0 = SF UI Text:style=medium:pixelsize={{polybar.font-size.latin}};hinting=slight;3
-font-1 = IPAGothic:pixelsize={{polybar.font-size.latin}};hinting=slight;3
-font-2 = Material Icons:pixelsize={{polybar.font-size.symbol}};hinting=slight;6
-font-3 = Symbola:pixelsize={{polybar.font-size.symbol}};hinting=slight;0
+font-0 = {{font.sans}}:style=medium:pixelsize={{polybar.font-size}};hinting={{polybar.font-hint}};3
+font-1 = {{font.jpn}}:pixelsize={{polybar.font-size}};hinting={{polybar.font-hint}};3
+font-2 = Material Icons:pixelsize={{polybar.symbol-size}};hinting={{polybar.symbol-hint}};6
+font-3 = Symbola:pixelsize={{polybar.symbol-size}};hinting={{polybar.symbol-hint}};0
 wm-restack = bspwm
 override-redirect = true
 enable-ipc = true
@@ -37,42 +45,48 @@ tray-padding = 10
 
 [bar/left]
 inherit = bar
-modules-left = bspwm
-width = 500px
+modules-left = {{polybar.bar-left.modules-left}}
+width = {{polybar.bar-left.width}}
 offset-x = 0px
-font-0 = Symbola:pixelsize={{polybar.font-size.symbol}};hinting=none;3
+font-0 = Symbola:pixelsize={{polybar.symbol-size}};hinting=none;3
 
 [bar/right]
-width = {{polybar.bar-right-width}}px
-offset-x = 10px
 inherit = bar
-modules-center = date
-modules-right = {{polybar.modules-right}}
+modules-center = {{polybar.bar-right.modules-center}}
+modules-right = {{polybar.bar-right.modules-right}}
+width = {{polybar.bar-right.width}}px
+offset-x = {{polybar.bar-right.padding-x}}px
 tray-position = right
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; MODULES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [module/bspwm]
 type = internal/bspwm
 format = <label-state>
-
 label-focused = ◆
 label-focused-foreground = ${colors.foreground}
 label-focused-padding = 2
-
 label-dimmed = ⬗
 label-dimmed-foreground = ${colors.foreground}
 label-dimmed-padding = 2
-
 label-occupied = ◈
 label-occupied-foreground = ${colors.foreground}
 label-occupied-padding = 2
-
 label-urgent = 🞜
 label-urgent-foreground = ${colors.foreground}
 label-urgent-padding = 2
-
 label-empty = ◇
 label-empty-foreground = ${colors.foreground}
 label-empty-padding = 2
+
+[module/date]
+type = internal/date
+interval = 5
+time = %A, %B %I:%M %p
+time-alt = %A, %d-%m-%Y %I:%M %p
+label = %time%
 
 
 [module/mpd]
@@ -141,14 +155,3 @@ type = internal/memory
 interval = 2
 label =   %gb_used% 
 
-[module/date]
-type = internal/date
-interval = 5
-time = %A, %B %I:%M %p
-time-alt = %A, %d-%m-%Y %I:%M %p
-label = %time%
-
-[module/username]
-type = custom/script
-exec = ~/bin/username
-interval = 90

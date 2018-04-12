@@ -1,6 +1,6 @@
 # Max's Dotfiles 💾
 
-![neofetch screenshot](fetch.png)
+![neofetch screenshot](neofetch.png)
 
 These are my dotfiles. They are customizable and can be deployed on different devices, thanks to their modular nature and the use of templating.
 

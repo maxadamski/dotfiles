@@ -3,8 +3,8 @@
 !-------------------------------------------
 ! Xcursor
 
-Xcursor.theme: {{cursor-theme}}
-Xcursor.size: {{cursor-size}}
+Xcursor.theme: {{cursor.theme}}
+Xcursor.size: {{cursor.size}}
 
 !-------------------------------------------
 ! XFT
@@ -12,15 +12,15 @@ Xcursor.size: {{cursor-size}}
 Xft.dpi:        {{x11.dpi}}
 Xft.antialias:  true 
 Xft.autohint:   false 
-Xft.hinting:    {{hint}}
-Xft.hintstyle:  {{hint-style}}
+Xft.hinting:    {{font.hint-enable}}
+Xft.hintstyle:  {{font.hint-style}}
 Xft.lcdfilter:  lcddefault
 Xft.rgba:       rgb
 
 !-------------------------------------------
 ! URxvt
 
-URxvt.font: xft:{{font-mono}}:size={{urxvt.font-size}},xft:{{font-jpn}},xft:{{font-kor}},xft:{{font-sym}},xft:{{font-ico}}
+URxvt.font: xft:{{font.mono}}:size={{urxvt.font-size}},xft:{{font.jpn}},xft:{{font.kor}},xft:{{font.sym}},xft:{{font.ico}}
 URxvt.internalBorder: 20
 URxvt.jumpScroll: true
 URxvt.dynamicColors: on
@@ -45,7 +45,7 @@ URxvt.keysym.C-P: perl:clipboard:paste
 ! st
 !
 
-st.font: {{font-mono}}:pixelsize={{st.font-size}}:antialias=true:autohint=false
+st.font: {{font.mono}}:pixelsize={{st.font-size}}:antialias=true:autohint=false
 st.borderpx: 20
 st.cursorshape: 4
 st.cursorthickness: 2
@@ -63,7 +63,7 @@ st.opacity: 250
 ! rofi
 
 rofi.fullscreen: false
-rofi.font: {{font-mono}} {{rofi.font-size}}
+rofi.font: {{font.mono}} {{rofi.font-size}}
 rofi.terminal: sh
 rofi.width: 35 
 rofi.padding: 12 

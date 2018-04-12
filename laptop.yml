@@ -1,50 +1,50 @@
 is_laptop: true
 
-light-widget-theme: Adwaita
-dark-widget-theme: Adapta-Nokto-Eta
-light-icon-theme: Papirus-Light
-qt-widget-theme: Fusion
-icon-theme: Papirus-Adapta-Nokto
-cursor-theme: Vanilla-DMZ-AA
-cursor-size: 22
-font-sans: SF UI Text
-font-mono: Inconsolata
-font-jpn: IPAGothic
-font-kor: NanumGothic
-font-ico: Material Icons
-font-sym: Symbola
+screen:
+    dpi: 165
+    x: 1920
+    y: 1080
+
+cursor:
+    theme: Vanilla-DMZ-AA
+    size: 22
 
 gtk:
     widget-theme: Adapta-Nokto-Eta
     icon-theme: Papirus-Adapta-Nokto
     font-size: 12
 
+qt:
+    widget-theme: Fusion
+    icon-theme: Papirus
+
 font:
-    hint: false
+    hint-enable: false
     hint-style: hintnone
+    mono: Inconsolata
+    sans: SF UI Text
+    jpn: IPAGothic
+    kor: NanumGothic
+    ico: Material Icons
+    sym: Symbola
 
 kitty:
     font-size: 13
 
 urxvt:
-    font-size: 15
+    font-size: 13
+
+rofi:
+    font-size: 13
+
+dunst:
+    font-size: 13
+
+zathura:
+    font-size: 13
 
 st:
     font-size: 20
-
-rofi:
-    font-size: 16
-
-dunst:
-    font-size: 14
-
-zathura:
-    font-size: 12
-
-screen:
-    dpi: 109
-    x: 1920
-    y: 1080
 
 x11:
     dpi: 96
@@ -60,10 +60,19 @@ bspwm:
         left: 5
 
 polybar:
-    bar-right-width: 1900
-    bar-padding-top: 7.5
-    bar-height: 20
-    modules-right: cpu memory battery wireless-network volume
-    font-size:
-        latin: 13
-        symbol: 18
+    symbol-size: 18
+    symbol-hint: slight
+    font-size: 13
+    font-hint: slight
+    bar:
+        padding-y: 7.5
+        height: 20
+    bar-right:
+        modules-right: cpu memory battery wireless-network volume
+        modules-center: date
+        padding-x: 10
+        width: 1900
+    bar-left:
+        modules-left: bspwm
+        width: 500
+
