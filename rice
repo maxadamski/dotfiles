@@ -58,7 +58,7 @@ done
 
 case $command in
 bootstrap)
-	rice::run -A -p "$pattern"
+	rice::run -a -p "$pattern"
 	;;
 packages)
 	modules=(setup user_packages)
