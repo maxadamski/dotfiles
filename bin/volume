@@ -23,6 +23,12 @@ alsa_status() {
 	echo $(amixer -M sget $1 | grep -Po '\[(on|off)\]' | grep -Pom1 '(on|off)')
 }
 
+# usage: alsa_plugged <name>
+alsa_plugged() {
+	echo alsa_plugged
+	#echo $(awk -F"," "\$3 == \"name='$1'\" { c=1 } c && /: values/ { split(\$0, a, \"=\"); print a[2]; exit }")
+}
+
 # usage: cap_value <percent: int>
 cap_value() {
 	local value=$1
@@ -41,13 +47,13 @@ volume::set() {
 	local value=$(cap_value "$2")
 	if [[ $auto_toggle == true ]]; then
 		if (( value > 0 )); then
-			amixer -M sset "$mixer" unmute
+			amixer -q -M sset "$mixer" unmute
 		else
-			amixer -M sset "$mixer" mute
+			amixer -q -M sset "$mixer" mute
 		fi
 	fi
 	maybe_notify "Volume: $value%"
-	amixer -M sset "$mixer" "$value%"
+	amixer -q -M sset "$mixer" "$value%"
 }
 
 # usage: volume::toggle <mixer>
@@ -57,24 +63,31 @@ volume::toggle() {
 	echo "$mixer: $status"
 	if [[ $status == "on" ]]; then
 		maybe_notify "Volume: muted"
-		amixer -M sset "$mixer" mute
+		amixer -q -M sset "$mixer" mute
 	elif [[ $status == "off" ]]; then
 		maybe_notify "Volume: unmuted"
-		amixer -M sset "$mixer" unmute
+		amixer -q -M sset "$mixer" unmute
 	fi
 }
 
+volume::usage() {
+	echo 'usage: volume get [--percent|--decibel] [-m|--mixer <mixer>]'
+	echo '       volume set <value> [-n|--notify]'
+	echo '       volume inc | dec [-s|--step <step>] [-n|--notify]'
+	echo '       volume mute | unmute | toggle'
+}
 
+auto_toggle=false
+auto_mute=false
 percent=false
 decibel=false
 notify=false
 status=false
 step=10
-command=$1
 value=''
 mixer=''
-auto_toggle=true
 
+command=$1
 shift
 while (( $# > 0 )); do
 	case $1 in
@@ -86,6 +99,14 @@ while (( $# > 0 )); do
 	-m|--mixer)
 		mixer=$2
 		shift
+		shift
+		;;
+	-t|--auto-toggle)
+		auto_toggle=true
+		shift
+		;;
+	-a|--auto-mute)
+		auto_mute=true
 		shift
 		;;
 	-n|--notify)
@@ -104,10 +125,6 @@ while (( $# > 0 )); do
 		status=true
 		shift
 		;;
-	-t|--auto-toggle)
-		auto_toggle=true
-		shift
-		;;
 	*)
 		value=$1
 		shift
@@ -115,7 +132,25 @@ while (( $# > 0 )); do
 	esac
 done
 
+if [[ $mixer == '' ]]; then
+	volume::usage
+	exit 1
+fi
+
 current=$(alsa_percent "$mixer")
+HEADPHONE_JACK_NAME='Headphone Jack'
+
+if [[ $auto_mute == true ]]; then
+	if [[ $(alsa_plugged 'Headphone Jack') == on ]]; then
+		echo headphone jack mute
+		amixer -q -M sset "Headphone" unmute
+		amixer -q -M sset "Speaker" mute
+	else
+		amixer -q -M sset "Headphone" mute
+		amixer -q -M sset "Speaker" unmute
+	fi
+fi
+
 case $command in
 get)
 	if [[ $percent == true ]]; then
@@ -138,19 +173,17 @@ dec)
 	volume::set "$mixer" "$(( current - step ))"
 	;;
 mute)
-	amixer -M sset "$mixer" mute
+	amixer -q -M sset "$mixer" mute
 	;;
 unmute)
-	amixer -M sset "$mixer" unmute
+	amixer -q -M sset "$mixer" unmute
 	;;
 toggle)
 	volume::toggle "$mixer"
 	;;
 *)
-	echo 'usage: volume get [--percent|--decibel] [-m|--mixer <mixer>]'
-	echo '       volume set <value> [-n|--notify]'
-	echo '       volume inc | dec [-s|--step <step>] [-n|--notify]'
-	echo '       volume mute | unmute | toggle'
+	volume::usage
+	exit 1
 	;;
 esac
 
