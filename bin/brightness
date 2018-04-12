@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+current=$(xbacklight -get)
+current=${current%%.*}
+notify=false
+step=10
+time=0
+value=''
+
+maybe_notify() {
+	if [[ $notify == true ]]; then
+		notify-send -t 1600 -u low -c system "Brightness: $value%"
+	fi
+}
+
+cap_value() {
+	if (( value > 100 )); then
+		value=100
+	fi
+	if (( value < 1 )); then
+		value=1
+	fi
+}
+
+command=$1
+shift
+
+while (( $# > 0 )); do
+	case $1 in
+	-t|--time)
+		time=$2
+		shift
+		shift
+		;;
+	-s|--step)
+		step=$2
+		shift
+		shift
+		;;
+	-n|--notify)
+		notify=true
+		shift
+		;;
+	*)
+		value=$1
+		shift
+		;;
+	esac
+done
+
+case $command in
+get)
+	echo $current
+	;;
+set)
+	cap_value
+	maybe_notify
+	xbacklight -time $time -set $value
+	;;
+inc)
+	value=$(( current + step ))
+	cap_value
+	maybe_notify
+	xbacklight -time $time -set $value
+	;;
+dec)
+	value=$(( current - step ))
+	cap_value
+	maybe_notify
+	xbacklight -time $time -set $value
+	;;
+*)
+	echo 'usage: brightness get | set <value> | inc | dec [-t|--time <time>] [-s|--step <step>] [-n|--notify]'
+	;;
+esac
+

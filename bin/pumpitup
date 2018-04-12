@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
 # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
-osascript -e 'set volume output volume 100'
+
+case $(uname) in
+	Darwin)
+		osascript -e 'set volume output volume 100'
+		;;
+esac
