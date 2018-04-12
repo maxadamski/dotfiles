@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
 shopt -s expand_aliases
-RICE_PATH=~/Documents/ricecooker/src/ricecooker.sh
 TEMPLATE_FUNCTION='template:mustache'
 TEMPLATE_HASH=(colors.yml)
-test -f "$RICE_PATH" && . "$RICE_PATH"
 rice_transaction_break_on_fail=false
 alias run='rice::exec'
 alias add='rice::add'

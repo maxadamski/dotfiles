@@ -1,4 +1,81 @@
 #!/usr/bin/env bash
 
+###############################################################################
+# INITIALIZE
+###############################################################################
+
+LIB_DIR="lib"
+RICE_URL="https://github.com/maxadamski/ricecooker"
+RICE_DIR="$LIB_DIR/ricecooker"
+RICE_PATH="$RICE_DIR/src/ricecooker.sh"
+
+# if ricecooker is not present, download it
+if [ ! -d $RICE_DIR ]; then
+	echo "[rice] downloading ricecooker..."
+	mkdir -p $LIB_DIR
+	git clone $RICE_URL $RICE_DIR
+fi
+
+rice::usage() {
+	echo 'usage: rice [bootstrap|packages|config] [-s|--system] -p|--pattern <pattern>'
+}
+
+###############################################################################
+# PARSE OPTIONS
+###############################################################################
+
+system=false
+pattern=''
+
+command=$1
+shift
+
+while (( $# > 0 )); do
+	case $1 in
+	-p|--pattern)
+		pattern=$2
+		shift
+		shift
+		;;
+	-s|--system)
+		system=true
+		shift
+		;;
+	*)
+		shift
+		;;
+	esac
+done
+
+###############################################################################
+# CONFIGIGURE
+###############################################################################
+
+# source framework
+. $RICE_PATH
+# source ricepacket
 . ricefile
-$@
+
+case $command in
+bootstrap)
+	rice::run -A -p "$pattern"
+	;;
+packages)
+	modules=(setup user_packages)
+	if [[ $system == true ]]; then
+		modules+=(system_packages system_packages_big system_services)
+	fi
+	rice::run -m  "${modules[@]}" -p "$pattern"
+	;;
+config)
+	modules=(setup user_config)
+	if [[ $system == true ]]; then
+		modules+=(system_config system_services)
+	fi
+	rice::run -m  "${modules[@]}" -p "$pattern"
+	;;
+*)
+	rice::usage
+	;;
+esac
+
