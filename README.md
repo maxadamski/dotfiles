@@ -25,7 +25,7 @@ Some of the programs I use:
 - image viewer:   sxiv
 - video player:   mpv
 - music player:   ncmpcpp
-- web browser:    firefox (migrating to uzbl/qute)
+- web browser:    firefox (migrating to luakit)
 - mail client:    thunderbird (migrating to mutt?)
 - office: sc-im, calc, latex+beamer, libreoffice
 ```
