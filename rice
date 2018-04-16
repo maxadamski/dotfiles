@@ -4,7 +4,8 @@
 # INITIALIZE
 ###############################################################################
 
-LIB_DIR="lib"
+SCRIPT_DIR=$(dirname $(realpath -s $0))
+LIB_DIR="$SCRIPT_DIR/lib"
 RICE_URL="https://github.com/maxadamski/ricecooker"
 RICE_DIR="$LIB_DIR/ricecooker"
 RICE_PATH="$RICE_DIR/src/ricecooker.sh"
@@ -52,9 +53,9 @@ done
 ###############################################################################
 
 # source framework
-. $RICE_PATH
+. "$RICE_PATH"
 # source ricepacket
-. ricefile
+. "$SCRIPT_DIR/ricefile"
 
 case $command in
 bootstrap)
