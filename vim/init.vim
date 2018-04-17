@@ -60,7 +60,6 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'zchee/deoplete-jedi'
 Plug 'lervag/vimtex'
 Plug 'gabrielelana/vim-markdown'
-Plug 'JamshedVesuna/vim-markdown-preview', { 'branch': 'bugfix/firefox' }
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'Soares/fish.vim'
 Plug 'junegunn/goyo.vim'

@@ -45,7 +45,11 @@ linkf() {
 
 	local makedirs=true
 	if [[ $makedirs == true ]]; then
-		mkdir -p "$(dirname "$dst")"
+		if (( ${#src[@]} > 1 )); then
+			mkdir -p "$dst"
+		else
+			mkdir -p "$(dirname "$dst")"
+		fi
 	fi
 	ln -fs "${src[@]}" "$dst"
 }
@@ -59,13 +63,6 @@ pkg() {
 	else
 		return $exit_code
 	fi
-}
-
-reload_fonts() {
-	# clear font cache
-	+ mkfontscale ~/.local/share/fonts
-	+ mkfontdir ~/.local/share/fonts
-	+ fc-cache -f
 }
 
 
@@ -187,8 +184,8 @@ system_keychain:void() {
 
 rice::add user_packages -x
 user_packages() {
-	+ pip3 install --user \
-		pywal pygments neovim ipython jupyter sqlalchemy Faker wheel
+	+ sudo pip3 install \
+		pygments neovim wheel
 }
 
 rice::add user_documents -x
@@ -211,8 +208,6 @@ user_documents() {
 	+ bsdtar -xf <(curl -sL "$URL_FONT_MONONOKI") -C ~/.fonts
 	rice::info 'intstall current wallpaper'
 	+ curl -sL "$URL_WALL_BONSAI" -o ~/Pictures/bonsai.jpg
-
-	reload_fonts
 }
 
 rice::add user_config
@@ -225,8 +220,8 @@ user_config() {
 	+ linkf bin/* ~/.local/bin
 	+ linkf ncmpcpp/* ~/.config/ncmpcpp
 	+ linkf ranger/* ~/.config/ranger
-	+ linkf vim/init.vim ~/.config/nvim/init.vim
 	+ linkf mpv/* ~/.config/mpv
+	+ linkf vim/init.vim ~/.config/nvim/init.vim
 	+ linkf shell/inputrc ~/.inputrc
 	+ linkf shell/bashrc ~/.bashrc
 	+ linkf git/config ~/.gitconfig
@@ -252,14 +247,15 @@ user_config:void() {
 	+ linkf compton/compton.conf ~/.config/compton.conf
 	+ linkf mpd/mpd.conf ~/.config/mpd/mpd.conf
 
-	reload_fonts
-
+	# clear font cache
+	+ mkfontscale ~/.local/share/fonts
+	+ mkfontdir ~/.local/share/fonts
+	+ fc-cache -f
 	# we have to relaunch some programs :/
 	+ killall polybar
 	+ -q polybar right & disown
 	+ -q polybar left & disown
 	+ -q pkill -SIGUSR1 sxhkd
-	+ bin/set_wallpaper ~/Pictures/bonsai.jpg
 	+ xrdb -merge ~/.config/X11/Xresources
 }
 
