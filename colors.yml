@@ -1,4 +1,4 @@
-wallpaper: "/home/max/Pictures/bonsai.jpg"
+wallpaper: "~/Pictures/bonsai.jpg"
 
 special:
     background:  "#150e12"

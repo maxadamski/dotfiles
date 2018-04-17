@@ -184,7 +184,7 @@ system_keychain:void() {
 
 rice::add user_packages -x
 user_packages() {
-	+ sudo pip3 install \
+	+ pip3 install --user \
 		pygments neovim wheel
 }
 

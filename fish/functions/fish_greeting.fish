@@ -1,3 +1,3 @@
 function fish_greeting
-	echo 'Hello Max, Welcome to fish!'
+	echo 'Hello, Welcome to fish!'
 end

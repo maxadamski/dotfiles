@@ -3,10 +3,10 @@
 #
 
 super + Return
-	~/.local/opt/kitty/bin/kitty
+	urxvt
 
 super + shift + Return
-	urxvt
+	~/.local/opt/kitty/bin/kitty
 
 super + @space
 	rofi -show run

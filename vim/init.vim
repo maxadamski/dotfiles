@@ -16,9 +16,9 @@ end
 
 "-- Use truecolor
 set t_Co=256
-if has('termguicolors')
-	set termguicolors
-endif
+"if has('termguicolors')
+"	set termguicolors
+"endif
 
 "-- Don't use swap files
 set noswapfile
