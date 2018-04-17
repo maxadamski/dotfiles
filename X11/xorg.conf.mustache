@@ -5,6 +5,12 @@ Section "ServerFlags"
 EndSection
 
 Section "InputClass"
+	Identifier         "Keyboard"
+	MatchIsKeyboard    "yes"
+	Option "XkbOptions" "caps:swapescape,terminate:ctrl_alt_bksp"
+EndSection
+
+Section "InputClass"
     Identifier         "Touchpad"
     Driver             "libinput"
     MatchIsTouchpad    "on"

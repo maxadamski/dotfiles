@@ -29,19 +29,21 @@ font:
     lcd-filter: lcddefault
     lcd-rgba: rgb
     mono: mononoki
-    sans: SF UI Text
+    sans: Noto Sans
+    serif: Noto Serif
     jpn: IPAGothic
     kor: NanumGothic
     ico: Material Icons
     sym: Symbola
 
 kitty:
-    font-size: 13
+    font-size: 16
 
 urxvt:
     font-size: 13
 
 rofi:
+    theme-light: true
     font-size: 13
 
 dunst:

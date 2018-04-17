@@ -25,6 +25,7 @@ rice::usage() {
 # PARSE OPTIONS
 ###############################################################################
 
+positional=()
 system=false
 pattern=''
 
@@ -43,6 +44,7 @@ while (( $# > 0 )); do
 		shift
 		;;
 	*)
+		positional+=("$1")
 		shift
 		;;
 	esac
@@ -58,6 +60,9 @@ done
 . "$SCRIPT_DIR/ricefile"
 
 case $command in
+run)
+	rice::run -p "$patern" "${positional[@]}"
+	;;
 bootstrap)
 	rice::run -a -p "$pattern"
 	;;

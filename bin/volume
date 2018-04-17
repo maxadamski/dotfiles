@@ -71,10 +71,10 @@ volume::toggle() {
 }
 
 volume::usage() {
-	echo 'usage: volume get [--percent|--decibel] [-m|--mixer <mixer>]'
-	echo '       volume set <value> [-n|--notify]'
-	echo '       volume inc | dec [-s|--step <step>] [-n|--notify]'
-	echo '       volume mute | unmute | toggle'
+	echo 'usage: volume get (-m|--mixer) <mixer> [--percent|--decibel]'
+	echo '       volume set ... <value> [-n|--notify]'
+	echo '       volume inc | dec ... [-s|--step <step>] [-n|--notify]'
+	echo '       volume mute | unmute | toggle ...'
 }
 
 auto_toggle=false
