@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 
-
 ###############################################################################
 # PREPARATIONS
 ###############################################################################
 
-HERE=$(dirname $(realpath -s $0))
-cd $HERE
+export DOTS=$(dirname $(realpath -s $0)); cd "$DOTS"
+export PATH=~/.gem/ruby/2.5.0/bin:$PATH
 
-TEMPLATE_FUNCTION='template:mustache'
-TEMPLATE_HASH=(colors.yml)
-MUSTACHE_DIR=~/.gem/ruby/2.5.0/bin
-export PATH=$MUSTACHE_DIR:$PATH
+test ! -d .ricecooker && git clone https://github.com/maxadamski/ricecooker .ricecooker
+
+. .ricecooker/src/ricecooker.sh
+
+rice_template_hashes=(colors.yml)
 rice_verbosity=2
 
 # You might ask what is this heresy, but if you don't like it, don't use it ;)
 # It saves a lot of keystrokes, you know...
 shopt -s expand_aliases
-alias +='rice::exec --failable'
-alias !='rice::exec'
+alias '+'='rice::exec --failable'
+alias '!'='rice::exec'
 
 
 ###############################################################################
@@ -72,12 +72,12 @@ pkg() {
 
 rice::add setup:void:desktop -m
 setup:void:desktop() {
-	TEMPLATE_HASH+=(desktop.yml)
+	rice_template_hashes+=(desktop.yml)
 }
 
 rice::add setup:void:laptop -m
 setup:void:laptop() {
-	TEMPLATE_HASH+=(laptop.yml)
+	rice_template_hashes+=(laptop.yml)
 }
 
 rice::add bootstrap:void -x -c
@@ -144,9 +144,9 @@ system_packages_big:void() {
 
 rice::add system_config:void
 system_config:void() {
-	+ template --sudo -m 600 system/blacklist.conf.mustache /etc/modprobe.d/blacklist.conf
-	+ template --sudo -m 644 system/grub.mustache /etc/default/grub
-	+ template --sudo -m 640 X11/xorg.conf.mustache /etc/X11/xorg.conf
+	+ rice::template --sudo -m 600 system/blacklist.conf.mustache /etc/modprobe.d/blacklist.conf
+	+ rice::template --sudo -m 644 system/grub.mustache /etc/default/grub
+	+ rice::template --sudo -m 640 X11/xorg.conf.mustache /etc/X11/xorg.conf
 	+ sudo install -Dm644 system/rc.conf /etc/rc.conf
 	+ sudo install -Dm644 system/sshd_config /etc/ssh/sshd_config
 	+ -q sudo update-grub
@@ -212,8 +212,8 @@ user_documents() {
 
 rice::add user_config
 user_config() {
-	+ template -m 750 fish/config.fish.mustache ~/.config/fish/config.fish
-	+ template kitty/kitty.conf.mustache ~/.config/kitty/kitty.conf
+	+ rice::template -m 750 fish/config.fish.mustache ~/.config/fish/config.fish
+	+ rice::template kitty/kitty.conf.mustache ~/.config/kitty/kitty.conf
 
 	+ linkd fish/functions ~/.config/fish/functions
 
@@ -230,17 +230,17 @@ user_config() {
 
 rice::add user_config:void
 user_config:void() {
-	+ template -m 750 -L X11/xinitrc.mustache ~/.xinitrc
-	+ template X11/Xresources.mustache ~/.config/X11/Xresources
-	+ template polybar/config.mustache ~/.config/polybar/config
-	+ template -m 750 bspwm/bspwmrc.mustache ~/.config/bspwm/bspwmrc
-	+ template -L gtk/gtkrc-3.0.mustache ~/.config/gtk-3.0/settings.ini
-	+ template -L gtk/gtkrc-2.0.mustache ~/.gtkrc-2.0
-	+ template zathura/zathurarc.mustache ~/.config/zathura/zathurarc
-	+ template rofi/config.mustache ~/.config/rofi/config
-	+ template rofi/theme.rasi.mustache ~/.config/rofi/theme.rasi
-	+ template dunst/dunstrc.mustache ~/.config/dunst/dunstrc
-	+ template fontconfig/fonts.conf.mustache ~/.config/fontconfig/fonts.conf
+	+ rice::template -m 750 bspwm/bspwmrc.mustache ~/.config/bspwm/bspwmrc
+	+ rice::template -m 750 X11/.xinitrc.mustache ~/.xinitrc
+	+ rice::template X11/Xresources.mustache ~/.config/X11/Xresources
+	+ rice::template polybar/config.mustache ~/.config/polybar/config
+	+ rice::template gtk/settings.ini.mustache ~/.config/gtk-3.0/settings.ini
+	+ rice::template gtk/.gtkrc-2.0.mustache ~/.gtkrc-2.0
+	+ rice::template zathura/zathurarc.mustache ~/.config/zathura/zathurarc
+	+ rice::template rofi/config.mustache ~/.config/rofi/config
+	+ rice::template rofi/theme.rasi.mustache ~/.config/rofi/theme.rasi
+	+ rice::template dunst/dunstrc.mustache ~/.config/dunst/dunstrc
+	+ rice::template fontconfig/fonts.conf.mustache ~/.config/fontconfig/fonts.conf
 
 	+ linkf sxhkd/sxhkdrc ~/.config/sxhkd/sxhkdrc
 	+ linkf qutebrowser/config.py ~/.config/qutebrowser/config.py
@@ -251,28 +251,30 @@ user_config:void() {
 	+ mkfontscale ~/.local/share/fonts
 	+ mkfontdir ~/.local/share/fonts
 	+ fc-cache -f
-	# we have to relaunch some programs :/
+	# restart some programs
+	+ xrdb -merge ~/.config/X11/Xresources
+	+ pkill -SIGUSR1 sxhkd
 	+ killall polybar
 	+ -q polybar right & disown
 	+ -q polybar left & disown
-	+ -q pkill -SIGUSR1 sxhkd
-	+ xrdb -merge ~/.config/X11/Xresources
 }
 
 rice::add user_keychain -x
 user_keychain() {
 	! test -d keychain
+	! install -Dm600 keychain/id_rsa ~/.ssh/id_rsa
+	+ install -Dm600 keychain/authorized_keys ~/.ssh/authorized_keys
 	+ install -Dm644 keychain/id_rsa.pub ~/.ssh/id_rsa.pub
-	+ install -Dm600 keychain/id_rsa ~/.ssh/id_rsa
+	+ git clone git@bitbucket.com:maxadamski/password-store ~/.password-store
 	+ gpg --import keychain/gpg_public.key
 	+ gpg --import keychain/gpg_secret.key
-	+ git clone git@bitbucket.com:maxadamski/password-store ~/.password-store
 }
 
 rice::add user_keychain:void -x
 user_keychain:void() {
 	! test -d keychain
-	+ cp -r keychain/mozilla ~/.mozilla
-	+ cp -r keychain/thunderbird ~/.thunderbird
+	+ linkd keychain/mozilla ~/.mozilla
+	+ linkd keychain/thunderbird ~/.thunderbird
 }
 
+"$@"
