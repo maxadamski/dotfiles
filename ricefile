@@ -9,7 +9,7 @@ export PATH=~/.gem/ruby/2.5.0/bin:$PATH
 
 test ! -d .ricecooker && git clone https://github.com/maxadamski/ricecooker .ricecooker
 
-. .ricecooker/src/ricecooker.sh
+. .ricecooker/ricecooker.sh
 
 rice_template_hashes=(colors.yml)
 rice_verbosity=2
