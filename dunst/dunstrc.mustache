@@ -1,5 +1,3 @@
-# vim: ft=cfg
-
 [global]
     monitor = 0
 
@@ -194,52 +192,22 @@
 
 [urgency_low]
     timeout = 10
-    #icon = /path/to/icon
+	background = "{{colors.color4}}"
+	foreground = "{{colors.color15}}"
 
 [urgency_normal]
     timeout = 10
-    #icon = /path/to/icon
+	background = "{{special.foreground}}"
+	foreground = "{{special.background}}"
 
 [urgency_critical]
     timeout = 0
-    #icon = /path/to/icon
-
-#[espeak]
-#    summary = "*"
-#    script = dunst_espeak.sh
-
-#[script-test]
-#    summary = "*script*"
-#    script = dunst_test.sh
-
-#[ignore]
-#    # This notification will not be displayed
-#    summary = "foobar"
-#    format = ""
+	background = "{{colors.color3}}"
+	foreground = "{{colors.color0}}"
 
 [system_info]
     # This notification will not be saved in history
     summary = "System Information"
     history_ignore = yes
 
-#[signed_on]
-#    appname = Pidgin
-#    summary = "*signed on*"
-#    urgency = low
-#
-#[signed_off]
-#    appname = Pidgin
-#    summary = *signed off*
-#    urgency = low
-#
-#[says]
-#    appname = Pidgin
-#    summary = *says*
-#    urgency = critical
-#
-#[twitter]
-#    appname = Pidgin
-#    summary = *twitter.com*
-#    urgency = normal
-#
 # vim: ft=cfg

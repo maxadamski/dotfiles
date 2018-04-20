@@ -19,6 +19,7 @@ rice_verbosity=2
 shopt -s expand_aliases
 alias '+'='rice::exec --failable'
 alias '!'='rice::exec'
+alias pkg='rice::exec -c 6 17 sudo xbps-install -Sy'
 
 
 ###############################################################################
@@ -54,16 +55,6 @@ linkf() {
 	ln -fs "${src[@]}" "$dst"
 }
 
-pkg() {
-	sudo xbps-install -Sy "$@"
-	local exit_code=$?
-	if [[ $exit_code == 17 || $exit_code == 6 ]]; then
-		# not an error, if package is already installed
-		return 0
-	else
-		return $exit_code
-	fi
-}
 
 
 ###############################################################################
@@ -80,23 +71,23 @@ setup:void:laptop() {
 	rice_template_hashes+=(laptop.yml)
 }
 
-rice::add bootstrap:void -x -c
+rice::add bootstrap:void -x
 bootstrap:void() {
-	+ pkg -u
-	+ pkg void-repo-multilib void-repo-nonfree
-	! pkg ruby curl bsdtar
-	! gem install mustache --user-install
+	pkg -u
+	pkg void-repo-multilib void-repo-nonfree
+	pkg ruby curl bsdtar
+	gem install mustache --user-install
 }
 
 rice::add bootstrap:void:laptop -x
 bootstrap:void:laptop() {
 	+ sudo xbps-pkgdb -m hold linux
-	+ pkg linux4.13 linux4.13-headers
+	pkg linux4.13 linux4.13-headers
 }
 
 rice::add system_packages:void
 system_packages:void() {
-	+ pkg \
+	pkg \
 		Adapta ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
 		alsa-tools alsa-utils apulse atool baobab bluez \
 		bspwm calc calcurse cgdb cgmanager clang cmake compton-git conky \
@@ -185,7 +176,7 @@ system_keychain:void() {
 rice::add user_packages -x
 user_packages() {
 	+ pip3 install --user \
-		pygments neovim wheel
+		pygments neovim wheel pywal
 }
 
 rice::add user_documents -x
@@ -257,6 +248,8 @@ user_config:void() {
 	+ killall polybar
 	+ -q polybar right & disown
 	+ -q polybar left & disown
+	+ killall dunst
+	+ -q dunst & disown
 }
 
 rice::add user_keychain -x
@@ -276,5 +269,10 @@ user_keychain:void() {
 	+ linkd keychain/mozilla ~/.mozilla
 	+ linkd keychain/thunderbird ~/.thunderbird
 }
+
+
+###############################################################################
+# PASS TO RICECOOKER
+###############################################################################
 
 "$@"
