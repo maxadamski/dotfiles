@@ -89,7 +89,7 @@ rice::add system_packages:void
 system_packages:void() {
 	pkg \
 		Adapta ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
-		alsa-tools alsa-utils apulse atool baobab bluez \
+		alsa-tools alsa-utils apulse atool baobab bluez chrony \
 		bspwm calc calcurse cgdb cgmanager clang cmake compton-git conky \
 		cryptsetup curlftpfs dunst exfat-dkms exfat-utils exiftool fcitx \
 		fcitx-configtool fcitx-mozc feh filezilla firefox fish-shell flex \
@@ -106,19 +106,20 @@ system_packages:void() {
 		unrar unzip urxvt-perls uzbl uzbl-tabbed w3m w3m-img \
 		xbanish xboxdrv xcompmgr xcursor-vanilla-dmz-aa xdotool xev \
 		xf86-input-joystick xlunch xmodmap xorg-minimal xrandr xrdb xset \
-		xsetroot xtools youtube-dl zathura zathura-djvu zathura-pdf-mupdf \
+		xsetroot xtools xbacklight youtube-dl \
+		zathura zathura-djvu zathura-pdf-mupdf \
 		zathura-ps zip
 }
 
 rice::add system_packages:void:desktop
 system_packages:void:desktop() {
-	+ pkg \
+	pkg \
 		nvidia
 }
 
 rice::add system_packages:void:laptop
 system_packages:void:laptop() {
-	+ pkg \
+	pkg \
 		xf86-video-nouveau \
 		xf86-video-intel \
 		tlp
@@ -126,7 +127,7 @@ system_packages:void:laptop() {
 
 rice::add system_packages_big:void -x
 system_packages_big:void() {
-	+ pkg \
+	pkg \
 		virtualbox-ose \
 		libreoffice \
 		texlive-bin \
@@ -151,10 +152,11 @@ system_config:void:laptop() {
 rice::add system_services:void
 system_services:void() {
 	+ sudo ln -sfT /etc/sv/alsa /var/service/alsa
-	+ sudo ln -sfT /etc/sv/bluetoothd /var/service/alsa
-	+ sudo ln -sfT /etc/sv/cgmanager /var/service/alsa
-	+ sudo ln -sfT /etc/sv/consolekit /var/service/alsa
-	+ sudo ln -sfT /etc/sv/dbus /var/service/alsa
+	+ sudo ln -sfT /etc/sv/bluetoothd /var/service/bluetoothd
+	+ sudo ln -sfT /etc/sv/cgmanager /var/service/cgmanager
+	+ sudo ln -sfT /etc/sv/consolekit /var/service/consolekit
+	+ sudo ln -sfT /etc/sv/dbus /var/service/dbus
+	+ sudo ln -sfT /etc/sv/chronyd /var/service/chronyd
 }
 
 rice::add system_services:void:laptop -x
