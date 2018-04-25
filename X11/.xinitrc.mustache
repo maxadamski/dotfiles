@@ -4,8 +4,10 @@
 # configure x11
 # 
 
+{{#is_laptop}}
 xrandr --output eDP1 --set "Broadcast RGB" "Full"
 xrandr --output eDP1 --dpi {{x11.dpi}}
+{{/is_laptop}}
 
 setxkbmap pl dvp
 {{#is_laptop}}
@@ -44,11 +46,14 @@ export SXHKD_SHELL=/bin/sh
 #export GDK_DPI_SCALE={{gtk.widget-scale}}
 #export QT_AUTO_SCREEN_SCALE_FACTOR={{qt.widget-scale}}
 
+{{#is_laptop}}
+xbacklight -set 60
+{{/is_laptop}}
+
 numlockx &
 sxhkd -m -1 &
 dunst &
 compton &
-xbacklight -set 60
 set_wallpaper {{wallpaper}}
 polybar -r right &
 polybar -r left &

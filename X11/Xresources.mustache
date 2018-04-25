@@ -22,7 +22,7 @@ Xft.rgba:       {{font.lcd-rgba}}
 
 URxvt.font: xft:{{font.mono}}:size={{urxvt.font-size}},xft:{{font.jpn}},xft:{{font.kor}},xft:{{font.sym}},xft:{{font.ico}}
 URxvt.termName: xterm-256color
-URxvt.internalBorder: 20
+URxvt.internalBorder: {{terminal.border}}
 URxvt.jumpScroll: true
 URxvt.dynamicColors: on
 URxvt.urgentOnBell: true
@@ -47,7 +47,7 @@ URxvt.keysym.C-P: perl:clipboard:paste
 !
 
 st.font: {{font.mono}}:pixelsize={{st.font-size}}:antialias=true:autohint=false
-st.borderpx: 20
+st.borderpx: {{terminal.border}}
 st.cursorshape: 4
 st.cursorthickness: 2
 st.cursorblinkstyle: 0

@@ -48,8 +48,8 @@ super + o ; {s,r,v}
 super + i ; {n,p,b}
 	{wifi-info,notify-battery,notify-brightness}
 
-super + o ; {m,p}
-	urxvt -name floating -geometry 100x40 -e {ncmpcpp,password}
+super + o ; {m,Return}
+	urxvt -name floating -geometry 100x40 -e {ncmpcpp,fish}
 
 super + {_,shift +} Tab
 	bspc {node,desktop} -f last

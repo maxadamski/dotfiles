@@ -11,7 +11,7 @@ test ! -d .ricecooker && git clone https://github.com/maxadamski/ricecooker .ric
 
 . .ricecooker/ricecooker.sh
 
-rice_template_hashes=(colors.yml)
+export RICE_TEMPLATE_HASHES=(colors.yml)
 rice_verbosity=2
 
 # You might ask what is this heresy, but if you don't like it, don't use it ;)
@@ -63,12 +63,12 @@ linkf() {
 
 rice::add setup:void:desktop -m
 setup:void:desktop() {
-	rice_template_hashes+=(desktop.yml)
+	RICE_TEMPLATE_HASHES+=(desktop.yml desktop_void.yml)
 }
 
 rice::add setup:void:laptop -m
 setup:void:laptop() {
-	rice_template_hashes+=(laptop.yml)
+	RICE_TEMPLATE_HASHES+=(laptop.yml laptop_void.yml)
 }
 
 rice::add bootstrap:void -x
@@ -247,11 +247,15 @@ user_config:void() {
 	# restart some programs
 	+ xrdb -merge ~/.config/X11/Xresources
 	+ pkill -SIGUSR1 sxhkd
+	+ pkill -SIGUSR1 st
 	+ killall polybar
 	+ -q polybar right & disown
 	+ -q polybar left & disown
 	+ killall dunst
 	+ -q dunst & disown
+	+ killall compton
+	+ -q compton & disown
+	+ ~/.config/bspwm/bspwmrc
 }
 
 rice::add user_keychain -x

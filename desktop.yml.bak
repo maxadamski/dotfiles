@@ -8,62 +8,53 @@ screen:
 x11:
     dpi: 96
 
-terminal:
-    border: 20
-
 cursor:
     theme: Vanilla-DMZ-AA
     size: 22
 
 gtk:
-    icon-theme: Papirus-Adapta-Nokto
     widget-theme: Adapta-Nokto-Eta
-    widget-scale: 1
-    font-size: 14
+    icon-theme: Papirus-Adapta-Nokto
+    font-size: 12
 
 qt:
     widget-theme: Fusion
-    widget-scale: 1
     icon-theme: Papirus
 
 font:
     hint-enable: false
     hint-style: hintnone
-    lcd-filter: lcddefault
-    lcd-rgba: rgb
-    mono: mononoki
-    sans: Noto Sans
-    serif: Noto Serif
+    mono: Inconsolata
+    sans: SF UI Text
     jpn: IPAGothic
     kor: NanumGothic
     ico: Material Icons
     sym: Symbola
 
 kitty:
-    font-size: 16
+    font-size: 13
 
 urxvt:
-    font-size: 16
+    font-size: 13
 
 rofi:
-    theme-light: true
-    font-size: 16
+    font-size: 13
 
 dunst:
-    font-size: 16
+    font-size: 13
 
 zathura:
-    font-size: 16
+    font-size: 13
 
 st:
-    font-size: 22
+    font-size: 20
 
 bspwm:
     desktop_names: "1 2 3 4 5 6 0"
     border_width: 1
     window_gap: 30
-    window_padding:
-        top: 30
+    window_padding: 
+        top: 20
         right: 20
         bottom: 20
         left: 20
@@ -74,15 +65,14 @@ polybar:
     font-size: 14
     font-hint: slight
     bar:
-        padding-y: 21
+        padding-y: 10
         height: 20
     bar-right:
         modules-right: cpu memory volume
         modules-center: date
-        padding-x: 25
-        width: 3790
+        padding-x: 10
+        width: 3820
     bar-left:
         modules-left: bspwm
-        padding-x: 15
         width: 500
 

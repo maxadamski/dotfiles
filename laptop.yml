@@ -8,6 +8,9 @@ screen:
 x11:
     dpi: 96
 
+terminal:
+    border: 20
+
 cursor:
     theme: Vanilla-DMZ-AA
     size: 22
@@ -80,5 +83,6 @@ polybar:
         width: 1900
     bar-left:
         modules-left: bspwm
+        padding-x: 0
         width: 500
 
