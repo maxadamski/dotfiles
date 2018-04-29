@@ -34,12 +34,9 @@ Some of the programs I use:
 
 ```sh
 git clone https://github.com/maxadamski/dotfiles ~/.dotfiles
-cd ~/.dotfiles
-./rice bootstrap
+~/.dotfiles/ricefile bootstrap !_:void:desktop
 ```
 
 # Credits
 
-Special thanks to the creators of the wonderful software.
-
-Some scripts in `bin` are taken from around the internet. Big thanks to the people who wrote them too!
+Some scripts in `bin` are taken from around the internet. Big thanks to the people who wrote them!

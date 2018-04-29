@@ -48,8 +48,14 @@ volume::set() {
 	if [[ $auto_toggle == true ]]; then
 		if (( value > 0 )); then
 			amixer -q -M sset "$mixer" unmute
+			amixer -q -M sset Headphone unmute
+			amixer -q -M sset Surround unmute
+			amixer -q -M sset Front unmute
 		else
 			amixer -q -M sset "$mixer" mute
+			amixer -q -M sset Headphone mute
+			amixer -q -M sset Surround mute
+			amixer -q -M sset Front mute
 		fi
 	fi
 	maybe_notify "Volume: $value%"
