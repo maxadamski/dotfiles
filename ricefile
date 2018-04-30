@@ -7,11 +7,15 @@
 export DOTS=$(dirname $(realpath -s $0)); cd "$DOTS"
 export PATH=~/.gem/ruby/2.5.0/bin:$PATH
 
-test ! -d .ricecooker && git clone https://github.com/maxadamski/ricecooker .ricecooker
+RICE_URL="https://github.com/maxadamski/ricecooker/releases/download/v0.1.0/ricecooker.sh"
+if [[ ! -f ricecooker.sh ]]; then
+	echo "ricefile: downloading '$RICE_URL'..."
+	curl -sL "$RICE_URL" -o ricecooker.sh
+fi
 
-. .ricecooker/ricecooker.sh
+. ricecooker.sh
 
-export RICE_TEMPLATE_HASHES=(colors.yml)
+export RICE_TEMPLATE_HASHES=(.hash/colors.yml)
 rice_verbosity=2
 
 # You might ask what is this heresy, but if you don't like it, don't use it ;)
@@ -61,14 +65,14 @@ linkf() {
 # MODULES
 ###############################################################################
 
-rice::add setup:void:desktop -m
+rice::add setup:void:desktop -h
 setup:void:desktop() {
-	RICE_TEMPLATE_HASHES+=(desktop.yml desktop_void.yml)
+	RICE_TEMPLATE_HASHES+=(.hash/desktop.yml .hash/desktop_void.yml)
 }
 
-rice::add setup:void:laptop -m
+rice::add setup:void:laptop -h
 setup:void:laptop() {
-	RICE_TEMPLATE_HASHES+=(laptop.yml laptop_void.yml)
+	RICE_TEMPLATE_HASHES+=(.hash/laptop.yml .hash/laptop_void.yml)
 }
 
 rice::add bootstrap:void -x
@@ -239,11 +243,15 @@ user_config:void() {
 	+ linkf qutebrowser/config.py ~/.config/qutebrowser/config.py
 	+ linkf compton/compton.conf ~/.config/compton.conf
 	+ linkf mpd/mpd.conf ~/.config/mpd/mpd.conf
+}
 
+rice::add user_config_teardown:void -h
+user_config_teardown:void() {
 	# clear font cache
 	+ mkfontscale ~/.local/share/fonts
 	+ mkfontdir ~/.local/share/fonts
 	+ fc-cache -f
+
 	# restart some programs
 	+ xrdb -merge ~/.config/X11/Xresources
 	+ pkill -SIGUSR1 sxhkd
@@ -276,6 +284,16 @@ user_keychain:void() {
 	+ linkd keychain/thunderbird ~/.thunderbird
 }
 
+###############################################################################
+# MACROS
+###############################################################################
+
+rebuild() {
+	rice::run "$@" +system_config:_ +user_config:_ -_
+} 
+upgrade() {
+	rice::run "$@" +system_packages:_ +system_packages_big:_ -_
+}
 
 ###############################################################################
 # PASS TO RICECOOKER

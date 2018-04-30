@@ -1,6 +1,6 @@
 keychain/*
 share/*
-.ricecooker/*
+ricecooker.sh
 
 ### macOS ###
 *.DS_Store

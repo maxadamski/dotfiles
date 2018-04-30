@@ -34,7 +34,7 @@ Some of the programs I use:
 
 ```sh
 git clone https://github.com/maxadamski/dotfiles ~/.dotfiles
-~/.dotfiles/ricefile bootstrap !_:void:desktop
+~/.dotfiles/ricefile rice::run -w @:void:desktop
 ```
 
 # Credits
