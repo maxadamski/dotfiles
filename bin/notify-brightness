@@ -1,3 +1,0 @@
-#!/usr/bin/env fish
-set -l brightness (xbacklight -get | string split '.')[1]
-notify-send -u normal 'Brightness' 'Level: '$brightness'%'

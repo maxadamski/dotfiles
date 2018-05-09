@@ -1,2 +1,0 @@
-#!/usr/bin/env sh
-i3lock -i Pictures/.wallpaper.png --insidecolor=00000000 --linecolor=00000000 --separatorcolor=00000000 --ringcolor=FFFFFFFF --keyhlcolor=CCCCCCFF --insidevercolor=00000000 --ringvercolor=FFFFFFFF --textcolor=FFFFFFFF --ringwrongcolor=FF0000FF --insidewrongcolor=FF0000FF --veriftext= --wrongtext=DENIED
