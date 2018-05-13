@@ -1,4 +1,5 @@
 is_laptop: true
+hostname: magician
 
 screen:
     dpi: 165.63

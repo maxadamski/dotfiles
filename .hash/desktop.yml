@@ -1,4 +1,5 @@
 is_desktop: true
+hostname: fool
 
 screen:
     dpi: 109

@@ -60,7 +60,6 @@ linkf() {
 }
 
 
-
 ###############################################################################
 # MODULES
 ###############################################################################
@@ -86,7 +85,7 @@ bootstrap:void() {
 rice::add bootstrap:void:laptop -x
 bootstrap:void:laptop() {
 	+ sudo xbps-pkgdb -m hold linux
-	pkg linux4.13 linux4.13-headers
+	pkg linux4.13 linux4.13-headers wifish wpa_gui
 }
 
 rice::add system_packages:void -x
@@ -143,6 +142,7 @@ system_config:void() {
 	+ rice::template --sudo -m 600 system/blacklist.conf.mustache /etc/modprobe.d/blacklist.conf
 	+ rice::template --sudo -m 644 system/grub.mustache /etc/default/grub
 	+ rice::template --sudo -m 640 X11/xorg.conf.mustache /etc/X11/xorg.conf
+	+ rice::template --sudo -m 644 system/hostname.mustache /etc/hostname
 	+ sudo install -Dm644 system/rc.conf /etc/rc.conf
 	+ sudo install -Dm644 system/sshd_config /etc/ssh/sshd_config
 	+ -q sudo update-grub
@@ -228,7 +228,6 @@ user_config() {
 rice::add user_config:void
 user_config:void() {
 	+ rice::template -m 750 bspwm/bspwmrc.mustache ~/.config/bspwm/bspwmrc
-	! false
 	+ rice::template -m 750 X11/.xinitrc.mustache ~/.xinitrc
 	+ rice::template X11/Xresources.mustache ~/.config/X11/Xresources
 	+ rice::template polybar/config.mustache ~/.config/polybar/config
@@ -273,7 +272,7 @@ user_keychain() {
 	! install -Dm600 keychain/id_rsa ~/.ssh/id_rsa
 	+ install -Dm600 keychain/authorized_keys ~/.ssh/authorized_keys
 	+ install -Dm644 keychain/id_rsa.pub ~/.ssh/id_rsa.pub
-	+ git clone git@bitbucket.com:maxadamski/password-store ~/.password-store
+	+ git clone git@github.com:maxadamski/password-store ~/.password-store
 	+ gpg --import keychain/gpg_public.key
 	+ gpg --import keychain/gpg_secret.key
 }
