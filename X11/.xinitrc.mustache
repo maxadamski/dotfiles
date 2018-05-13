@@ -47,10 +47,12 @@ export SXHKD_SHELL=/bin/sh
 #export QT_AUTO_SCREEN_SCALE_FACTOR={{qt.widget-scale}}
 
 {{#is_laptop}}
+export WPA_CLI_INTERFACE=wlp2s0
 xbacklight -set 60
 {{/is_laptop}}
 
 numlockx &
+xbanish &
 sxhkd -m -1 &
 dunst &
 compton &
