@@ -2,6 +2,10 @@
 
 fish_vi_key_bindings
 
+{{#rice_tree_suffix}}
+set -x RICE_TREE_SUFFIX {{rice_tree_suffix}}
+{{/rice_tree_suffix}}
+
 {{#is_macos}}
 test -e ~/.config/iterm2/shell_integration.fish; and source ~/.config/iterm2/shell_integration.fish
 {{/is_macos}}
@@ -31,10 +35,6 @@ set -x EMAIL_CLIENT thunderbird
 
 set -x PYTHONPATH $PYTHONPATH /usr/local/anaconda3/lib/python3.6/site-packages
 
-{{#rice_selector}}
-set -x RICE_SELECTOR {{rice_selector}}
-{{/rice_selector}}
-
 {{#is_desktop}}
 set -x CUDA_PATH /opt/cuda-9.0
 set -x LD_LIBRARY_PATH $CUDA_PATH/lib64
@@ -46,6 +46,7 @@ maybe_path_prepend ~/.local/opt/kitty/bin
 maybe_path_append ~/.local/opt/anaconda3/bin
 maybe_path_append ~/.local/opt/mathematica/bin
 maybe_path_append ~/.gem/ruby/2.5.0/bin
+maybe_path_append /opt/texlive/2017/bin/x86_64-linux
 
 alias l "ls -hl"
 alias r "ranger"
@@ -54,7 +55,7 @@ alias m $MUSIC_PLAYER
 alias v $EDITOR
 alias p $PAGER
 alias suv "sudoedit"
-alias rice "~/.dotfiles/ricefile rice::run"
+alias rice "~/.dotfiles/ricefile"
 
 function conda_activate
 	source (conda info --root)/etc/fish/conf.d/conda.fish

@@ -65,13 +65,13 @@ super + m ; {p,t,n,s}
 	mpc {prev,toggle,next,stop}
 
 XF86Audio{Lower,Raise}Volume
-	volume {dec,inc} --mixer Master --step 5 --auto-toggle --auto-mute
+	volume {dec,inc} --mixer Master --step 5 --auto-toggle
 
 shift + XF86Audio{Lower,Raise}Volume
-	volume set {20,80} --mixer Master --notify --auto-mute
+	volume set {20,80} --mixer Master --notify
 
 XF86AudioMute
-	volume toggle --mixer Master --notify --auto-mute
+	volume toggle --mixer Master --notify
 
 XF86MonBrightness{Down,Up}
 	brightness {dec,inc} -s 10 -t 200

@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
-function delete_store() {
+delete_store() {
 	# Recursively delete `.DS_Store` files
 	sudo find . -type f -name '*.DS_Store' -ls -delete
 }
 
-function delete_dot() {
+delete_dot() {
 	# Recursively delete files with names beginning with `._`
 	sudo find . -name '._*' -ls -delete
 }
 
 case $1 in
-	store )
+	store)
 		delete_store
 		;;
-	dot )
+	dot)
 		delete_dot
 		;;
-	all )
+	all)
 		delete_store
 		delete_dot
 		;;
-	* )
+	*)
 		echo "usage: nuke (dot|store|all)"
 		exit 1
 		;;

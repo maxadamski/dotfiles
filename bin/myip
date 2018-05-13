@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 case $1 in
-	ext)
-		dig +short myip.opendns.com @resolver1.opendns.com
-		;;
-	int)
-		ipconfig getifaddr en0
-		;;
-	*)
-		echo "usage: ip (int|ext)"
-		exit 1
-		;;
+ext)
+	dig +short myip.opendns.com @resolver1.opendns.com
+	;;
+int)
+	ipconfig getifaddr en0
+	;;
+*)
+	echo "usage: ip (int|ext)"
+	exit 1
+	;;
 esac

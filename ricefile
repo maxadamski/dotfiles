@@ -7,12 +7,16 @@
 export DOTS=$(dirname $(realpath -s $0)); cd "$DOTS"
 export PATH=~/.gem/ruby/2.5.0/bin:$PATH
 
-test ! -d .ricecooker && git clone https://github.com/maxadamski/ricecooker .ricecooker
+RICE_URL="https://github.com/maxadamski/ricecooker/releases/download/v0.1.1/ricecooker.sh"
+if [[ ! -f ricecooker.sh ]]; then
+	echo "ricefile: downloading '$RICE_URL'..."
+	curl -sL "$RICE_URL" -o ricecooker.sh
+fi
 
-. .ricecooker/ricecooker.sh
+. ricecooker.sh
 
-export RICE_TEMPLATE_HASHES=(colors.yml)
-rice_verbosity=2
+RICE_TEMPLATE_HASHES=(.hash/colors.yml)
+RICE_VERBOSITY=2
 
 # You might ask what is this heresy, but if you don't like it, don't use it ;)
 # It saves a lot of keystrokes, you know...
@@ -61,14 +65,14 @@ linkf() {
 # MODULES
 ###############################################################################
 
-rice::add setup:void:desktop -m
+rice::add setup:void:desktop -h
 setup:void:desktop() {
-	RICE_TEMPLATE_HASHES+=(desktop.yml desktop_void.yml)
+	RICE_TEMPLATE_HASHES+=(.hash/desktop.yml .hash/desktop_void.yml)
 }
 
-rice::add setup:void:laptop -m
+rice::add setup:void:laptop -h
 setup:void:laptop() {
-	RICE_TEMPLATE_HASHES+=(laptop.yml laptop_void.yml)
+	RICE_TEMPLATE_HASHES+=(.hash/laptop.yml .hash/laptop_void.yml)
 }
 
 rice::add bootstrap:void -x
@@ -85,7 +89,7 @@ bootstrap:void:laptop() {
 	pkg linux4.13 linux4.13-headers
 }
 
-rice::add system_packages:void
+rice::add system_packages:void -x
 system_packages:void() {
 	pkg \
 		Adapta ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
@@ -111,13 +115,13 @@ system_packages:void() {
 		zathura-ps zip
 }
 
-rice::add system_packages:void:desktop
+rice::add system_packages:void:desktop -x
 system_packages:void:desktop() {
 	pkg \
 		nvidia
 }
 
-rice::add system_packages:void:laptop
+rice::add system_packages:void:laptop -x
 system_packages:void:laptop() {
 	pkg \
 		xf86-video-nouveau \
@@ -224,6 +228,7 @@ user_config() {
 rice::add user_config:void
 user_config:void() {
 	+ rice::template -m 750 bspwm/bspwmrc.mustache ~/.config/bspwm/bspwmrc
+	! false
 	+ rice::template -m 750 X11/.xinitrc.mustache ~/.xinitrc
 	+ rice::template X11/Xresources.mustache ~/.config/X11/Xresources
 	+ rice::template polybar/config.mustache ~/.config/polybar/config
@@ -239,22 +244,26 @@ user_config:void() {
 	+ linkf qutebrowser/config.py ~/.config/qutebrowser/config.py
 	+ linkf compton/compton.conf ~/.config/compton.conf
 	+ linkf mpd/mpd.conf ~/.config/mpd/mpd.conf
+}
 
+rice::add user_config_teardown:void -h
+user_config_teardown:void() {
 	# clear font cache
 	+ mkfontscale ~/.local/share/fonts
 	+ mkfontdir ~/.local/share/fonts
 	+ fc-cache -f
+
 	# restart some programs
 	+ xrdb -merge ~/.config/X11/Xresources
 	+ pkill -SIGUSR1 sxhkd
 	+ pkill -SIGUSR1 st
 	+ killall polybar
-	+ -q polybar right & disown
-	+ -q polybar left & disown
+	+ polybar right & disown
+	+ polybar left & disown
 	+ killall dunst
-	+ -q dunst & disown
+	+ dunst & disown
 	+ killall compton
-	+ -q compton & disown
+	+ compton & disown
 	+ ~/.config/bspwm/bspwmrc
 }
 
@@ -276,9 +285,22 @@ user_keychain:void() {
 	+ linkd keychain/thunderbird ~/.thunderbird
 }
 
+###############################################################################
+# MACROS
+###############################################################################
+
+rebuild() {
+	rice::run -w "(setup|user_config|user_config_teardown)$RICE_TREE_SUFFIX"
+}
+rebuild-full() {
+	rice::run -w "(setup|system_config|user_config|user_config_teardown)$RICE_TREE_SUFFIX"
+} 
+upgrade() {
+	rice::run -w "(setup|system_packages|system_packages_big|user_packages)$RICE_TREE_SUFFIX"
+}
 
 ###############################################################################
 # PASS TO RICECOOKER
 ###############################################################################
 
-"$@"
+$@
