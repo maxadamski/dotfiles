@@ -91,27 +91,27 @@ bootstrap:void:laptop() {
 rice::add system_packages:void -x
 system_packages:void() {
 	pkg \
-		Adapta ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
+		ConsoleKit2 Fritzing ImageMagick MultiMarkdown R Thunar \
 		alsa-tools alsa-utils apulse atool baobab bluez chrony \
 		bspwm calc calcurse cgdb cgmanager clang cmake compton-git conky \
 		cryptsetup curlftpfs dunst exfat-dkms exfat-utils exiftool fcitx \
-		fcitx-configtool fcitx-mozc feh filezilla firefox fish-shell flex \
+		fcitx-configtool fcitx-mozc feh filezilla chromium fish-shell flex \
 		font-fira-otf font-inconsolata-otf font-symbola fontmanager \
 		fuse-sshfs gcolor2 gengetopt gftp git glances gnupg gparted \
 		highlight htop inxi ipafont-fonts-otf kcov mdadm mozc mpc mpd mpv \
 		mupdf mkfontdir mkfontscale ncmpcpp neofetch neovim nftables \
 		noto-fonts-emoji noto-fonts-ttf ntfs-3g numlockx openjdk p7zip \
 		pamixer papirus-icon-theme pass pavucontrol plank pmount polybar \
-		pulsemixer pylint python python-pip python3 python3-pip qbittorrent \
+		pulsemixer pylint python python-pip python3 python3-pip transmission-gtk \
 		qjackctl qsynth qt5-styleplugins qt5ct ranger renameutils retroarch \
 		rofi rstudio ruby rust rxvt-unicode sc-im scrot sct setxkbmap \
 		shellcheck subversion sxhkd sxiv thunderbird tig tmux udevil unp \
 		unrar unzip urxvt-perls uzbl uzbl-tabbed w3m w3m-img \
 		xbanish xboxdrv xcompmgr xcursor-vanilla-dmz-aa xdotool xev \
 		xf86-input-joystick xlunch xmodmap xorg-minimal xrandr xrdb xset \
-		xsetroot xtools xbacklight youtube-dl \
-		zathura zathura-djvu zathura-pdf-mupdf \
-		zathura-ps zip
+		xsetroot xtools xbacklight youtube-dl gnome-themes-standard \
+		zathura zathura-djvu zathura-pdf-mupdf zathura-ps zip \
+		tumbler thunar-archive-plugin
 }
 
 rice::add system_packages:void:desktop -x
@@ -133,7 +133,6 @@ system_packages_big:void() {
 	pkg \
 		virtualbox-ose \
 		libreoffice \
-		texlive-bin \
 		wine-32bit 
 }
 
@@ -146,6 +145,15 @@ system_config:void() {
 	+ sudo install -Dm644 system/rc.conf /etc/rc.conf
 	+ sudo install -Dm644 system/sshd_config /etc/ssh/sshd_config
 	+ -q sudo update-grub
+}
+
+rice::add system_config_latex:void -x
+system_config_latex:void() {
+	pkg texlive
+	+ sudo groupadd latex
+	+ sudo usermod max -aG latex
+	+ sudo chown :latex -R /opt/texlive/2018
+	echo "Logout is required after adding to the 'latex' group"
 }
 
 rice::add system_config:void:laptop

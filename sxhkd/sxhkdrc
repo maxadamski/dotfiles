@@ -32,10 +32,11 @@ super + {_,alt +} r
 super + {_,alt +} m
 	bspc node @/ --flip {vertical,horizontal}
 
-#super + {_,shift +}{1-5}
+# NOTE: dvorakp: &,[,{,},( == qwerty: 1,2,3,4,5
 @super + {_,shift +} {ampersand,bracketleft,braceleft,braceright,parenleft}
 	bspc {desktop --focus,node --to-desktop} ^{1-5}
 
+# NOTE: dvorakp: !,# == qwerty: {-,=}
 @super + {_,shift +} {exclam,numbersign}
 	bspc {desktop --focus,node --to-desktop} {prev,next}
 

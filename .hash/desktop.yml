@@ -17,15 +17,15 @@ cursor:
     size: 22
 
 gtk:
-    icon-theme: Papirus-Adapta-Nokto
-    widget-theme: Adapta-Nokto-Eta
+    icon-theme: Papirus
+    widget-theme: Adwaita
     widget-scale: 1
     font-size: 14
 
 qt:
-    widget-theme: Fusion
-    widget-scale: 1
     icon-theme: Papirus
+    widget-theme: Adwaita
+    widget-scale: 1
 
 font:
     hint-enable: false
