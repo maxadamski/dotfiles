@@ -118,6 +118,9 @@ rice::add system_packages:void:desktop -x
 system_packages:void:desktop() {
 	pkg \
 		nvidia
+
+	# install broadcom firmware
+	+ sudo curl -L https://github.com/winterheart/broadcom-bt-firmware/raw/master/brcm/BCM20702A1-0b05-17cb.hcd -o /lib/firmware/brcm/BCM20702A1-0b05-17cb.hcd
 }
 
 rice::add system_packages:void:laptop -x
@@ -147,13 +150,22 @@ system_config:void() {
 	+ -q sudo update-grub
 }
 
-rice::add system_config_latex:void -x
-system_config_latex:void() {
+rice::add packages:latex:void -x
+packages:latex:void() {
 	pkg texlive
+	+ linkf latex/.latexmkrc ~/.latexmkrc
 	+ sudo groupadd latex
 	+ sudo usermod max -aG latex
 	+ sudo chown :latex -R /opt/texlive/2018
-	echo "Logout is required after adding to the 'latex' group"
+	echo "NOTE: Logout is required after adding to the 'latex' group"
+}
+
+rice::add packages:anaconda:void -x
+packages:anaconda:void() {
+	+ curl -sL https://repo.anaconda.com/archive/Anaconda3-5.1.0-Linux-x86_64.sh -o /tmp/conda3.sh
+	+ chmod +x /tmp/conda3.sh
+	+ /tmp/conda3.sh -b -p ~/.local/opt/anaconda3
+	echo "NOTE: Activate anaconda in fish with 'conda_activate'"
 }
 
 rice::add system_config:void:laptop
