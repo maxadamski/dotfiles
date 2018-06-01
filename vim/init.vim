@@ -70,6 +70,9 @@ Plug 'morhetz/gruvbox'
 Plug 'jnurmine/Zenburn'
 Plug 'arcticicestudio/nord-vim'
 Plug 'mhartington/Oceanic-Next'
+Plug 'elixir-lang/vim-elixir'
+Plug 'thinca/vim-ref'
+Plug 'kbrw/elixir.nvim'
 
 call plug#end()
 

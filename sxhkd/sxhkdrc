@@ -55,9 +55,24 @@ super + o ; {m,Return}
 super + {_,shift +} Tab
 	bspc {node,desktop} -f last
 
+super + XF86Tools
+	setxkbmap us dvp; \
+	notify-send -t 1600 -u low -c system 'Keyboard Layout' 'US Dvorak Pro'
+
+super + XF86Launch5
+	setxkbmap pl dvp; \
+	notify-send -t 1600 -u low -c system 'Keyboard Layout' 'PL Dvorak Pro'
+
+super + XF86Launch6
+	setxkbmap pl; \
+	notify-send -t 1600 -u low -c system 'Keyboard Layout' 'PL Programmer'
+
 #
 # media keys
 #
+
+super + y
+	eyesaver --toggle --notify
 
 XF86Audio{Prev,Play,Next} 
 	mpc {prev,toggle,next}

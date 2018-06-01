@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+sct_hi=${SCT_HI:-6500}
+sct_lo=${SCT_LO:-3000}
+notify=false
+toggle=true
+enable=false
+disable=false
+
+usage() {
+	echo "eyesaver [-n|--notify] [-t|--toggle (default)] [-e|--enable] [-d|--disable]"
+}
+
+notify_set() {
+	notify-send -t 1600 -u low -c system 'Screen Temperature' "Set to $1K"
+	
+}
+
+sct::enable() {
+	touch /tmp/eyesaver
+	sct $sct_lo
+	test $notify = true && notify_set $sct_lo
+}
+
+sct::disable() {
+	rm -f /tmp/eyesaver
+	sct $sct_hi
+	test $notify = true && notify_set $sct_hi
+}
+
+sct::toggle() {
+	test -f /tmp/eyesaver && sct::disable || sct::enable
+}
+
+## Parse args
+
+while (( $# > 0 )); do
+	case $1 in
+	-n|--notify)
+		notify=true
+		shift;;
+	-t|--toggle)
+		toggle=true
+		shift;;
+	-e|--enable)
+		enable=true
+		shift;;
+	-d|--disable)
+		disable=true
+		shift;;
+	-h|--help)
+		usage
+		exit 0;;
+	*)
+		shift;;
+	esac
+done
+
+## Run commands
+
+if [ $disable = true ]; then sct::disable
+elif [ $enable = true ]; then sct::enable
+elif [ $toggle = true ]; then sct::toggle
+fi

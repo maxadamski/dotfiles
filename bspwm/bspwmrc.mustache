@@ -25,7 +25,8 @@ bspc config active_border_color   "{{colors.color8}}"
 bspc rule -r '*'
 
 bspc rule -a '*:floating' state=floating
-floating=(mpv Sxiv qBittorrent Octave devel)
+floating=(mpv feh Sxiv qBittorrent Octave devel Transmission-gtk \
+	'VirtualBox Machine' 'VirtualBox Manager')
 for class in "${floating[@]}"; do
 	bspc rule -a $class state=floating
 done
