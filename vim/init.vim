@@ -15,10 +15,10 @@ if &shell =~# 'fish$'
 end
 
 "-- Use truecolor
-set t_Co=256
-"if has('termguicolors')
-"	set termguicolors
-"endif
+"set t_Co=256
+if has('termguicolors')
+	set termguicolors
+endif
 
 "-- Don't use swap files
 set noswapfile
@@ -50,31 +50,83 @@ endif
 
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'shougo/denite.nvim'
+" essentials
+
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'neomake/neomake'
-Plug 'Shougo/deoplete.nvim'
-"Plug 'zchee/deoplete-clang'
-Plug 'zchee/deoplete-jedi'
+Plug 'shougo/denite.nvim'
+"Plug 'autozimu/LanguageClient-neovim', \
+"   {'branch': 'next', 'do': 'bash install.sh'}
+
+" languages
+
+" - python
+"Plug 'davidhalter/jedi-vim'
+"Plug 'vim-python/python-syntax'
+
+" - nim
+Plug 'zah/nim.vim'
+
+" - latex
 Plug 'lervag/vimtex'
-Plug 'gabrielelana/vim-markdown'
+"Plug 'thinca/vim-ref'
+
+" - markdown
+
+Plug 'iamcco/mathjax-support-for-mkdp'
+Plug 'iamcco/markdown-preview.vim'
+"Plug 'gabrielelana/vim-markdown'
+
+" - swift
+Plug 'keith/swift.vim'
+
+" - elixir
+"Plug 'elixir-lang/vim-elixir'
+"Plug 'kbrw/elixir.nvim'
+
+" - ebnf
+Plug 'vim-scripts/ebnf.vim'
+
+" - julia
+Plug 'JuliaEditorSupport/julia-vim'
+
+" - antlr
+Plug 'dylon/vim-antlr'
+
+" - fish
+"Plug 'Soares/fish.vim'
+
+" - mustache
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'Soares/fish.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
+
+" - haskell
+Plug 'neovimhaskell/haskell-vim'
+
+
+" tweaks
+
+Plug 'thaerkh/vim-indentguides'
+"Plug 'junegunn/limelight.vim'
+"Plug 'junegunn/goyo.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'morhetz/gruvbox'
-Plug 'jnurmine/Zenburn'
-Plug 'arcticicestudio/nord-vim'
+
+
+" colors
+
 Plug 'mhartington/Oceanic-Next'
-Plug 'elixir-lang/vim-elixir'
-Plug 'thinca/vim-ref'
-Plug 'kbrw/elixir.nvim'
+Plug 'morhetz/gruvbox'
+Plug 'xero/sourcerer.vim'
+Plug 'jnurmine/Zenburn'
+Plug 'juanedi/predawn.vim'
+Plug 'arcticicestudio/nord-vim'
+Plug 'ayu-theme/ayu-vim' " or other package manager
 
 call plug#end()
+"...
 
 "--
 "- Basic settings
@@ -92,7 +144,7 @@ set wildmenu
 
 set autoindent
 set tabstop=4
-set softtabstop=4
+set softtabstop=0
 set shiftwidth=4
 set smarttab
 
@@ -103,18 +155,29 @@ set ruler
 set listchars=tab:▸\ ,eol:¬
 set list
 
+set foldmethod=indent
+set foldlevel=1
+set foldclose=all
+set nofoldenable
+
+au VimEnter * :set conceallevel=0
 au VimEnter * :set showtabline=0
 
-colorscheme zenburn
-let g:airline_theme = 'minimalist'
+set colorcolumn=65,80
 
 "set background=dark
-let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 1
+let ayucolor="dark"   " for dark version of theme
+let g:nord_italic = 1
+let g:nord_underline = 1
+let g:nord_italic_comments = 1
+let g:nord_comment_brightness = 15
+colorscheme nord
+"let g:airline_theme = 'raven'
 
 "make the background transparent
-hi Normal guibg=NONE ctermbg=NONE
-hi LineNr guibg=NONE ctermbg=NONE
+hi Comment ctermfg=Blue
+"hi Normal guibg=NONE ctermbg=NONE
+"hi LineNr guibg=NONE ctermbg=NONE
 "hi NonText guibg=NONE ctermbg=NONE
 "hi EndOfBuffer guibg=NONE ctermbg=NONE
 
@@ -136,11 +199,14 @@ nmap <localleader>mm :Neomake<CR>
 nmap <localleader>sc :Neomake! proselint<CR> 
 nnoremap <expr><silent> <leader>, &showtabline ? ":set showtabline=0\<cr>" : ":set showtabline=2\<cr>"
 
+noremap <F12> <Esc>:syntax sync fromstart<CR>
+inoremap <F12> <C-o>:syntax sync fromstart<CR>
+
 "-- Write with sudo
 cmap w!! w !sudo tee % > /dev/null
 
 "-- File type specific
-autocmd FileType python nnoremap <silent> <leader>r :!clear;python3 %<CR>
+"autocmd FileType python nnoremap <silent> <leader>r :!clear;python3 %<CR>
 
 "-- Easy window movement
 noremap <C-J> <C-W>j
@@ -158,9 +224,22 @@ inoremap <Down> <Nop>
 inoremap <Left> <Nop>
 inoremap <Right> <Nop>
 
+au BufRead,BufNewFile *.gg set filetype=ginko
+au BufRead,BufNewFile *.vc set filetype=VitaminC
+au BufRead,BufNewFile *.ebnf set filetype=ebnf
+au BufRead,BufNewFile *.g set filetype=antlr3
+au BufRead,BufNewFile *.g4 set filetype=antlr4
+
 "--
 "- Plugin configuration
 "--
+
+let g:python_highlight_all = 1
+
+"-- Indent Guides
+let g:indentguides_ignorelist = ['text']
+let g:indentguides_spacechar = '┆'
+let g:indentguides_tabchar = '|'
 
 "-- Airline
 let g:airline_powerline_fonts = 1
@@ -213,9 +292,39 @@ let g:deoplete#sources#clang#clang_header = '/usr/lib/clang/4.0.1/include/'
 let g:vimtex_view_method = 'mupdf'
 
 "-- markdown
-"let g:vim_markdown_preview_hotkey='<localleader>lv'
-let g:vim_markdown_preview_pandoc=1
-"let g:vim_markdown_preview_toggle=3
-"let g:vim_markdown_preview_github=1
-let g:vim_markdown_preview_use_xdg_open=1
-let g:vim_markdown_preview_browser='firefox'
+"let g:vim_markdown_preview_hotkey = '<localleader>lv'
+let g:vim_markdown_preview_pandoc = 1
+"let g:vim_markdown_preview_toggle = 3
+"let g:vim_markdown_preview_github = 1
+let g:vim_markdown_preview_use_xdg_open = 1
+let g:vim_markdown_preview_browser = 'chromium'
+
+"-- OceanicNext
+let g:oceanic_next_terminal_bold = 1
+let g:oceanic_next_terminal_italic = 1
+
+
+"--
+"- Makers
+"--
+
+call neomake#configure#automake('w')
+let g:neomake_python_enabled_makers = ['mypy']
+let g:neomake_python_mypy_args = ['--check-untyped-defs', '--ignore-missing-imports']
+let g:neomake_highlight_columns = 1
+let g:neomake_highlight_lines = 0
+
+
+"--
+"- Language Server
+"--
+
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+

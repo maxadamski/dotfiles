@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+message() {
+    rofi -markup -e "$@"
+}
+
+error() {
+    rofi -theme ~/.config/rofi/error.rasi -markup -e "$@"
+}
+
+input() {
+    local positional=()
+
+    while (( $# > 0 )); do
+        case $1 in
+            *)
+                positional+=("$1")
+                shift;;
+        esac
+    done
+
+    rofi -dmenu -lines 0 "${positional[@]}"
+}
+
+choose() {
+    IFS=':'
+    local positional=()
+    local items=()
+    local index=false
+
+    while (( $# > 0 )); do
+        case $1 in
+            --items)
+                items+=($(echo "$3" | tr "$2" "$IFS"))
+                shift 3;;
+            --index)
+                index="$2"
+                shift 2;;
+            *)
+                positional+=("$1")
+                shift;;
+        esac
+    done
+
+    if [ "$index" != false ]; then
+        for (( i=0 ; i < ${#items[@]} ; i++ )); do
+            items[$i]="$((i + index)). ${items[$i]}"
+        done
+    fi
+
+    local choice="$(
+        echo "${items[*]}" |\
+        rofi -sep ':' -dmenu -no-custom -lines ${#items[@]} "${positional[@]}"
+    )"
+
+    if [ "$index" != false ]; then
+        choice=$(echo "$choice" | sed -E 's/^[0-9]+\. //')
+    fi
+
+    echo "$choice"
+}
+
+"$@"

@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+#
+# configuration
+#
+
+GROUP=storage
+EXCLUDE="(sda1|sdb)"
+
+#
+# script start
+#
+
+GID=$(cat /etc/group | grep $GROUP | cut -d ':' -f 3)
+
+DRIVES="$(sudo lsblk -rno TYPE,NAME,SIZE,FSTYPE,LABEL,MOUNTPOINT |
+    tr ' ' '\t' | grep 'part' | grep -vE "$EXCLUDE" | cut -f 2-6)"
+
+DRIVE="$(mymenu choose --items '\n' "$(printf "$DRIVES")"\
+    -p 'disk' -mesg "name&#09;size&#09;type&#09;label&#09;path")"
+
+SELECTED="$(echo "$DRIVE" | cut -f 1)"
+
+[ -z "$DRIVE" ] && exit 0
+
+system_notify() {
+    notify-send -t 3200 -c system "$@"
+}
+
+rofi_ask() {
+    rofi -dmenu -mesg "$1"
+}
+
+dev_mountpoint() {
+    local dev="$1"
+    sudo lsblk "$dev" -no MOUNTPOINT
+}
+
+dev_label() {
+    local dev="$1"
+    sudo lsblk "$dev" -no LABEL | tr ' ' '\ '
+}
+
+dev_model() {
+    local dev="$1"
+    sudo lsblk "$dev" -no MODEL | tr ' ' '\ '
+}
+
+new_mountpoint() {
+    local dev="$1"
+    local label="$(dev_label "$dev")"
+    local model="$(dev_model "$(echo "$dev" | sed 's/[0-9]//')")"
+
+    if [ -n "$label" ]; then
+        echo "$label"
+    elif [ -n "$model" ]; then
+        echo "$model"
+    else
+        basename "$dev"
+    fi
+
+    return 0
+}
+
+disk_action() {
+    local dev="/dev/$(echo "$DRIVE" | cut -f 1)"
+    local path="$(dev_mountpoint "$dev")"
+    local opt=''
+    local cmd=''
+    test "$1" = 'Force-unmount' && opt='-f'
+    test "$1" = 'Lazy-unmount' && opt='-l'
+
+    case $1 in
+        Mount)
+            cmd='mount';;
+        Unmount)
+            cmd='unmount';;
+        'Force unmount')
+            cmd='unmount'
+            opt='-f';;
+        'Lazy unmount')
+            cmd='unmount'
+            opt='-l';;
+    esac
+
+    case $cmd in
+        mount)
+            path="/media/$(new_mountpoint "$dev")"
+            mkdir "$path" &> /dev/null
+            chown :$GROUP "$path" &> /dev/null
+            error="$(sudo mount "$dev" "$path" -o umask=0002,gid="$GID" 2>&1)"
+            test "$?" != 0 && mymenu error "$error" && exit 1
+            system_notify "Mounted volume" "$path"
+            ;;
+        unmount)
+            test "$path" = "" && fatal_error "Device is not mounted!"
+            error="$(sudo umount $opt "$path" 2>&1)"
+            test "$?" != 0 && mymenu error "$error" && exit 1
+            system_notify "Unmounted volume" "$path"
+            ;;
+    esac
+}
+
+ACTIONS="Cancel,Mount,Unmount,Force unmount,Lazy unmount"
+ACTION="$(mymenu choose --items ',' "$ACTIONS" --index 0\
+    -p 'action' -mesg "selected $SELECTED")"
+
+disk_action "$ACTION"
+

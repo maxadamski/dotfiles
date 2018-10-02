@@ -1,1 +1,10 @@
 $include /etc/inputrc
+
+set editing-mode vi
+set blink-matching-paren on
+set show-mode-in-prompt on
+set vi-ins-mode-string "I "
+set vi-cmd-mode-string "N "
+
+# switch to block cursor before executing a command
+set keymap vi-insert

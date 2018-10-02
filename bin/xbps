@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+
+SUDO="sudo"
+SYNC="-S"
+
+#
+# Install packages
+#
+
+install-usage() {
+cat << EOF
+USAGE
+    xp install [OPTIONS] [XPBS-OPTIONS] [PACKAGE...]
+
+OPTIONS
+    -h --help
+    -H --xbps-help
+
+XBPS-OPTIONS
+    -n --dry-run
+    -v --verbose
+    -y --yes
+    -V --version
+EOF
+}
+
+install() {
+    local pos=()
+
+    while (( $# > 0 )); do
+        case $1 in
+            -h|--help)
+                install-usage
+                return;;
+            -H|--xbps-help)
+                xbps-install --help
+                return;;
+            *)
+                pos+=("$1")
+                shift;;
+        esac
+    done
+
+    # no arguments make no sense
+    if [ ${#pos[@]} = 0 ]; then
+        install-usage
+        return 1
+    fi
+
+    "$SUDO" xbps-install -S "${pos[@]}"
+}
+
+#
+# Update packages
+#
+
+update-usage() {
+cat << EOF
+USAGE
+    xp update [OPTIONS] [XPBS-OPTIONS]
+
+OPTIONS
+    -h --help
+    -H --xbps-help
+
+XBPS-OPTIONS
+    -n --dry-run
+    -v --verbose
+    -y --yes
+    -V --version
+EOF
+}
+
+update() {
+    local pos=()
+
+    while (( $# > 0 )); do
+        case $1 in
+            -h|--help)
+                update-usage
+                return;;
+            -H|--xbps-help)
+                xbps-install --help
+                return;;
+            *)
+                pos+=("$1")
+                shift;;
+        esac
+    done
+
+    "$SUDO" xbps-install "$SYNC" -u "${pos[@]}"
+}
+
+#
+# Search packages
+#
+
+search-usage() {
+cat << EOF
+USAGE
+    xp search [OPTIONS] [XPBS-OPTIONS]
+
+OPTIONS
+    -h --help
+    -H --xbps-help
+EOF
+}
+
+search() {
+    local pos=()
+
+    while (( $# > 0 )); do
+        case $1 in
+            -h|--help)
+                search-usage
+                return;;
+            -H|--xbps-help)
+                xbps-query --help
+                return;;
+            *)
+                pos+=("$1")
+                shift;;
+        esac
+    done
+
+    # no arguments make no sense
+    if [ ${#pos[@]} = 0 ]; then
+        install-usage
+        return 1
+    fi
+
+    "$SUDO" xbps-query -Rs "${pos[@]}"
+}
+
+#
+# List packages
+#
+
+list-usage() {
+cat << EOF
+USAGE
+    xp list [OPTIONS] [XPBS-OPTIONS]
+
+OPTIONS
+    -h --help
+    -H --xbps-help
+EOF
+}
+
+list() {
+    local pos=()
+    local mode="-m"
+
+    while (( $# > 0 )); do
+        case $1 in
+            -h|--help)
+                list-usage
+                return;;
+            -H|--xbps-help)
+                xbps-query --help
+                return;;
+            *)
+                pos+=("$1")
+                shift;;
+        esac
+    done
+
+    "$SUDO" xbps-query "$mode" "${pos[@]}"
+}
+
+
+#
+# Main program
+#
+
+usage_top() {
+cat << EOF
+XP - convenient wrappers for the Void Linux XBPS
+
+USAGE
+    xp [OPTIONS] [COMMAND]
+
+COMMANDS
+    i in install
+    u up update
+    s se search
+    r re refresh
+    l ls list
+
+    !remove
+    !freeze
+    !downgrade
+
+OPTIONS
+    -h --help
+    -V --version
+    -r --no-sudo
+    -s --no-sync
+EOF
+}
+
+version() {
+    echo "0.0.1"
+}
+
+POS=()
+while (( $# > 0 )); do
+    case $1 in
+        -s|--no-sync)
+            SYNC=""
+            shift;;
+        -r|--no-root)
+            SUDO=""
+            shift;;
+        -h|--help)
+            usage_top
+            exit 0;;
+        -V|--version)
+            version
+            exit 0;;
+        *)
+            POS+=("$1")
+            shift;;
+    esac
+done
+
+CMD="${POS[0]}"
+# remove command from positional args
+POS=("${POS[@]:1}")
+
+case $CMD in
+    i|in|install)
+        install "${POS[@]}"
+        ;;
+    u|up|update)
+        update "${POS[@]}"
+        ;;
+    s|se|search)
+        search "${POS[@]}"
+        ;;
+    l|ls|list)
+        list "${POS[@]}"
+        ;;
+    *)
+        usage_top
+        exit 1;;
+esac
+

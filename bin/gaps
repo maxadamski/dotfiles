@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+
+case $1 in
+    -s|--spacious)
+        window_gap=70
+        top_padding=60
+        all_padding=40
+        shift 1;;
+    -n|--normal)
+        window_gap=30
+        top_padding=30
+        all_padding=20
+        shift 1;;
+    -c|--compact)
+        window_gap=4
+        top_padding=60
+        all_padding=2
+        shift 1;;
+    *)
+        shift;;
+esac
+
+bspc config window_gap $window_gap
+bspc config top_padding $top_padding
+for dir in right left bottom; do
+	bspc config ${dir}_padding $all_padding
+done

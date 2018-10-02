@@ -3,6 +3,79 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-export PATH=$PATH:/opt/texlive/2017/bin/x86_64-linux
+prompt_right() {
+  echo -e "\033[0;36m\\\t\033[0m"
+}
+
+prompt_left() {
+  echo -e "\033[0;35m\w\033[0m"
+}
+
+prompt() {
+    compensate=5
+    PS1=$(printf "%*s\r%s\n > " "$(($(tput cols)+${compensate}))" "$(prompt_right)" "$(prompt_left)")
+}
+
+. ~/.config/shell/path.sh
+
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export HISTFILE=$XDG_DATA_HOME/history
+
+export RANGER_LOAD_DEFAULT_RC=FALSE
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+export LESS="-cR"
+export EDITOR=nvim
+export SUDO_EDITOR=$EDITOR
+export PAGER=less
+export MANPAGER=less
+#export MANPAGER="nvim -c 'set ft=man' -"
+export FILE_EXPLORER=ranger
+export MUSIC_PLAYER=ncmpcpp
+export VIDEO_PLAYER=mpv
+export EMAIL_CLIENT=thunderbird
+
+export PYTHONPATH=$PYTHONPATH:/usr/local/anaconda3/lib/python3.6/site-packages
+export CUDA_PATH=/opt/cuda-9.0
+export LD_LIBRARY_PATH=$CUDA_PATH/lib64:$LD_LIBRARY_PATH
+
+export _JAVA_AWT_WM_NONREPARENTING=1
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dsun.java2d.xrender=true -Dsun.java2d.uiScale=2'
+export CLASSPATH=.:~/.local/lib/antlr-4.7.1-complete.jar:$CLASSPATH
+export BSPWM_STATE=~/.cache/bspwm/state.json
+
+path -p ~/.local/bin
+path -o -a ~/.local/opt/anaconda3/bin
+path -o -a ~/.local/opt/mathematica/bin
+path -o -a ~/.local/opt/scala/bin
+path -o -a ~/.local/opt/pycharm/bin
+path -o -a ~/.local/opt/idea/bin
+path -o -a ~/.local/opt/sbt/bin
+path -o -a ~/.gem/ruby/2.5.0/bin
+path -o -a /opt/texlive/2018/bin/x86_64-linux
+path -o -p /usr/lib/jvm/openjdk/bin
+
 alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
+alias l="ls -hl"
+alias r="ranger"
+alias g="egrep -i"
+alias m='$MUSIC_PLAYER'
+alias v='$EDITOR'
+alias p='$PAGER'
+alias suv="sudoedit"
+alias rice="~/.dotfiles/ricefile"
+alias rerice="rice rebuild"
+alias virice="v ~/.dotfiles/ricefile"
+
+alias antlr4='java -jar ~/.local/lib/antlr-4.7.1-complete.jar'
+alias grun='java org.antlr.v4.gui.TestRig'
+
+
+#PROMPT_COMMAND=prompt
+
+PS1="\W >\[$(tput sgr0)\] "
+
+

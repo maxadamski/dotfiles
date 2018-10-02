@@ -541,4 +541,5 @@ progressbar_look = ->
 #window_border_color = green
 #
 #active_window_border = red
-#
+
+user_interface = alternative

@@ -91,7 +91,7 @@ notify=false
 status=false
 step=10
 value=''
-mixer=''
+mixer='Master'
 
 command=$1
 shift
@@ -192,4 +192,5 @@ toggle)
 	exit 1
 	;;
 esac
+
 

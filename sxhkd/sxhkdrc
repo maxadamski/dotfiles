@@ -3,16 +3,22 @@
 #
 
 super + Return
-	urxvt
+	alacritty
 
 super + shift + Return
-	~/.local/opt/kitty/bin/kitty
+    urxvt
 
 super + @space
-	rofi -show run
+	rofi -modi combi -show combi -combi-modi drun,run
+
+super + shift + @space
+	rofi -show window
 
 super + q
 	bspc node --close
+
+super + b
+    bspc node @/ --balance
 
 super + {_,shift +,alt +} {h,j,k,l}
 	bspc node --{focus,swap,presel-dir} {west,south,north,east}
@@ -44,13 +50,16 @@ super + o ; {c,f,t}
 	{chromium,firefox,~/opt/thunderbird/thunderbird}
 
 super + o ; {s,r,v} 
-	urxvt -e {fish,ranger,nvim}
+	alacritty -e {bash,ranger,nvim}
 
 super + i ; {n,p,b}
 	{wifi-info,notify-battery,notify-brightness}
 
 super + o ; {m,Return}
-	urxvt -name floating -geometry 100x40 -e {ncmpcpp,fish}
+	alacritty --class floating --dimensions 100 40 -e {ncmpcpp,bash}
+
+super + g ; {s,n,c}
+    gaps --{spacious,normal,compact}
 
 super + {_,shift +} Tab
 	bspc {node,desktop} -f last
@@ -71,6 +80,12 @@ super + XF86Launch6
 # media keys
 #
 
+super + @XF86Eject
+    power-menu
+
+XF86Eject
+    mount-menu
+
 super + y
 	eyesaver --toggle --notify
 
@@ -81,13 +96,13 @@ super + m ; {p,t,n,s}
 	mpc {prev,toggle,next,stop}
 
 XF86Audio{Lower,Raise}Volume
-	volume {dec,inc} --mixer Master --step 5 --auto-toggle
+	volume {dec,inc} --notify --step 5 --auto-toggle
 
 shift + XF86Audio{Lower,Raise}Volume
-	volume set {20,80} --mixer Master --notify
+	volume set {20,80} --notify
 
 XF86AudioMute
-	volume toggle --mixer Master --notify
+	volume toggle --notify
 
 XF86MonBrightness{Down,Up}
 	brightness {dec,inc} -s 10 -t 200

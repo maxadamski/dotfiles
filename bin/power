@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+choice() {
+    case $1 in
+    Cancel)
+        ;;
+    Sleep)
+        sudo zzz
+        ;;
+    Power)
+        sudo poweroff
+        ;;
+    Reboot)
+        sudo reboot
+        ;;
+    *)
+        ;;
+    esac
+}
+
+PROMPT="Power Menu: "
+ITEMS="0. Cancel,1. Sleep,2. Power Off,3. Reboot"
+THEME=~/.config/rofi/dimmed.rasi
+
+savewm
+choice "$(\
+    echo "$ITEMS" |\
+    rofi -dmenu -sep , -i -lines 4 -p "$PROMPT" -theme $THEME |\
+    cut -d ' ' -f 2
+)"

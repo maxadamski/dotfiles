@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# vim: ft=sh
+
+bspc monitor --reset-desktops 1 2 3 4 5 6 0
+
+bspc config border_width   1
+bspc config window_gap     30
+
+bspc config top_padding 30
+for dir in right left bottom; do
+	bspc config ${dir}_padding 20
+done
+
+bspc config split_ratio 0.5
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+bspc config focus_follows_pointer true
+
+bspc config normal_border_color   "#150e12"
+bspc config focused_border_color  "#e7e6e1"
+bspc config presel_feedback_color "#C6B06F"
+bspc config active_border_color   "#a1a19d"
+
+# remove all rules in case we're reloading bspwm
+bspc rule -r '*'
+
+bspc rule -a '*:floating' state=floating
+floating=(mpv feh Sxiv qBittorrent Octave devel Transmission-gtk \
+	'VirtualBox Machine' 'VirtualBox Manager' Mnemosyne Anki \
+    'org-antlr-v4-gui-TestRig' 'VMPK-Virtual MIDI Piano Keyboard')
+for class in "${floating[@]}"; do
+	bspc rule -a "$class" state=floating
+done
+

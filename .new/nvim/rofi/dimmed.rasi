@@ -1,0 +1,39 @@
+* {
+    fg: white;
+    bg: rgba(0, 0, 0, 0.7);
+
+    background-color: transparent;
+    text-color: @fg;
+    border-color: red;
+    font: "mononoki 25";
+
+    fullscreen: true;
+}
+
+#window {
+    background-color: @bg;
+    border-radius: 2px;
+    width: 500px;
+}
+
+#mainbox {
+    padding: 40%;
+}
+
+#inputbar {
+    margin: 0px 0px 30px 0px;
+}
+
+#element {
+    padding: 5px 8px;
+    margin: 2px 0 2px 0;
+}
+
+#element selected {
+    background-color: rgba(255, 255, 255, 1);
+    text-color: black;
+}
+
+#textbox {
+
+}
